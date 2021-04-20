@@ -7,6 +7,7 @@ class dsp_base_seqc extends uvm_sequence #(datagen_seqi);
     // base transaction
     datagen_seqi                    datagen_seqi_i;
     datagen_seqi                    datagen_seqi_o;
+    datagen_seqr                    datagen_seqr_h;
 
     extern function void copy_item();
 
