@@ -5,6 +5,7 @@ class dsp_base_layr extends uvm_component;
     extern function void build_phase(uvm_phase phase);
 
     datagen_seqr                    datagen_seqr_i;
+    datagen_seqr                    datagen_seqr_o;
 endclass
 
 //--------------------------------------------------------------------------------------------------------------------------------
