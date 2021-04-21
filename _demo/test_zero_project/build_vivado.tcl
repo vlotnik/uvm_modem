@@ -18,6 +18,7 @@ add_files -norecurse tb_top.sv
 add_files -norecurse $src_path/common/common_macros.svh
 add_files -norecurse $src_path/DSP/libraries/pkg_logo.sv
 add_files -norecurse $src_path/DSP/libraries/pkg_modem.sv
+add_files -norecurse $src_path/DSP/BFM/ddc/if_ddc_bfm.sv
 
 # uvm
 set_property -name {xsim.compile.xvlog.more_options} -value {-L uvm} -objects [get_filesets sim_1]
