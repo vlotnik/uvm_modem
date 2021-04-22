@@ -9,6 +9,7 @@ module tb_top;
     `include "common_macros.svh"
 
     import pkg_modem::*;
+    import pkg_demo_basemod::*;
 
     `print_logo
 
@@ -26,5 +27,13 @@ module tb_top;
 
     assign if_ddc_bfm_h.clk         = clk;
     assign if_ddc_bfm_h.iq_v        = 1;
+
+//--------------------------------------------------------------------------------------------------------------------------------
+// UVM test
+//--------------------------------------------------------------------------------------------------------------------------------
+    initial begin
+        uvm_config_db #(virtual if_ddc_bfm #(.INCH_NUMBER(2)))::set(null, "*", "if_ddc_bfm_h", if_ddc_bfm_h);
+        run_test("demo_basemod_test");
+    end
 
 endmodule
