@@ -4,3 +4,4 @@ libraries/pkg_modem.sv
 pkg_vrf_dsp_components.sv
 pkg_vrf_dsp_modulators.sv
 BFM/ddc/if_ddc_bfm.sv
+pkg_vrf_dsp_bfm.sv
