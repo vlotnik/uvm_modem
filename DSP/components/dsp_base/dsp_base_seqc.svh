@@ -1,3 +1,6 @@
+//--------------------------------------------------------------------------------------------------------------------------------
+// name : dsp_base_seqc
+//--------------------------------------------------------------------------------------------------------------------------------
 class dsp_base_seqc extends uvm_sequence #(datagen_seqi);
     `uvm_object_utils(dsp_base_seqc)
     `uvm_object_new
@@ -13,7 +16,6 @@ class dsp_base_seqc extends uvm_sequence #(datagen_seqi);
 
     // create bit stream
     bit random_data = 1;
-    int pldsz = 0;
     bit bitstream[];
 
     // settings
@@ -28,11 +30,10 @@ task dsp_base_seqc::body();
     `uvm_object_create(datagen_seqi, datagen_seqi_i)
 
     if (random_data == 1) begin
-        pldsz = tr_pldsz;
-        assert(datagen_seqi_i.randomize() with {
-                bitstream.size() inside {pldsz};
-            });
-        datagen_seqi_i.tr_pldsz = pldsz;
+        bitstream = new[tr_pldsz];
+        datagen_seqi_i.bitstream = this.bitstream;
+        assert(datagen_seqi_i.randomize());
+        datagen_seqi_i.tr_pldsz = tr_pldsz;
     end else begin
         datagen_seqi_i.bitstream = this.bitstream;
         datagen_seqi_i.tr_pldsz = this.bitstream.size;
