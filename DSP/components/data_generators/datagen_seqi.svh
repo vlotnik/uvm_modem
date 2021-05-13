@@ -1,3 +1,6 @@
+//--------------------------------------------------------------------------------------------------------------------------------
+// name : datagen_seqi
+//--------------------------------------------------------------------------------------------------------------------------------
 class datagen_seqi extends uvm_sequence_item;
     `uvm_object_utils(datagen_seqi)
     `uvm_object_new
@@ -5,6 +8,8 @@ class datagen_seqi extends uvm_sequence_item;
     // data
     rand bit                        bitstream[];
     int                             iq_sym[];
+    real                            iq_i[];
+    real                            iq_q[];
 
     // settings
     int                             tr_pldsz = 0;           // payload size
@@ -27,6 +32,8 @@ function void datagen_seqi::do_copy(uvm_object rhs);
     super.do_copy(rhs);
     this.bitstream                  = that.bitstream;
     this.iq_sym                     = that.iq_sym;
+    this.iq_i                       = that.iq_i;
+    this.iq_q                       = that.iq_q;
     this.tr_pldsz                   = that.tr_pldsz;
     this.tr_frsz                    = that.tr_frsz;
     this.tr_mod                     = that.tr_mod;
