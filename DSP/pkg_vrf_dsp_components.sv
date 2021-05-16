@@ -1,3 +1,6 @@
+//--------------------------------------------------------------------------------------------------------------------------------
+// name : pkg_vrf_dsp_components
+//--------------------------------------------------------------------------------------------------------------------------------
 package pkg_vrf_dsp_components;
     import uvm_pkg::*;
     `include "uvm_macros.svh"
@@ -16,4 +19,10 @@ package pkg_vrf_dsp_components;
     // symbol framer
     `include "./components/data_generators/dsp_seqc_sym_framer.svh"
     `include "./components/data_generators/dsp_layr_sym_framer.svh"
+
+    // iq mapper
+    `include "./components/iq_mappers/iqmap_base.svh"
+    `include "./components/iq_mappers/iqmap.svh"
+    `include "./components/iq_mappers/dsp_seqc_iq_mapper.svh"
+    `include "./components/iq_mappers/dsp_layr_iq_mapper.svh"
 endpackage
