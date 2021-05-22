@@ -7,6 +7,7 @@ package pkg_vrf_dsp_components;
     `include "common_macros.svh"
 
     import pkg_modem::*;
+    import pkg_modem_math::*;
 
     // data generators
     `include "./components/data_generators/datagen_seqi.svh"
@@ -25,4 +26,9 @@ package pkg_vrf_dsp_components;
     `include "./components/iq_mappers/iqmap.svh"
     `include "./components/iq_mappers/dsp_seqc_iq_mapper.svh"
     `include "./components/iq_mappers/dsp_layr_iq_mapper.svh"
+
+    // filters
+    `include "./components/filters/filter_design.svh"
+    `include "./components/filters/dsp_seqc_resampler.svh"
+    `include "./components/filters/dsp_layr_resampler.svh"
 endpackage
