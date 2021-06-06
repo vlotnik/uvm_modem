@@ -1,5 +1,6 @@
 libraries/pkg_logo.sv
 libraries/pkg_modem.sv
+libraries/pkg_modem_math.sv
 +incdir+../common
 pkg_vrf_dsp_components.sv
 pkg_vrf_dsp_modulators.sv
