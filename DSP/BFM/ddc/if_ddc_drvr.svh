@@ -30,6 +30,13 @@ task if_ddc_drvr::run_phase(uvm_phase phase);
             $display("IQ I: %p", datagen_seqi_h.iq_i);
             $display("IQ Q: %p", datagen_seqi_h.iq_q);
             $display("\n");
+
+            foreach(datagen_seqi_h.iq_i[i]) begin
+                @(posedge if_ddc_bfm_h.clk);
+
+                if_ddc_bfm_h.iq_i[0] <= $rtoi($floor(datagen_seqi_h.iq_i[i] * 512 + 0.5));
+                if_ddc_bfm_h.iq_q[0] <= $rtoi($floor(datagen_seqi_h.iq_q[i] * 512 + 0.5));
+            end
         seq_item_port.item_done();
     end
 endtask
