@@ -29,6 +29,7 @@ package pkg_vrf_dsp_components;
 
     // filters
     `include "./components/filters/filter_design.svh"
+    `include "./components/filters/fir_resampler.svh"
     `include "./components/filters/dsp_seqc_resampler.svh"
     `include "./components/filters/dsp_layr_resampler.svh"
 endpackage
