@@ -32,4 +32,9 @@ package pkg_vrf_dsp_components;
     `include "./components/filters/fir_resampler.svh"
     `include "./components/filters/dsp_seqc_resampler.svh"
     `include "./components/filters/dsp_layr_resampler.svh"
+
+    // mixer
+    `include "./components/dsp_math/dspmath_mixer.svh"
+    `include "./components/dsp_math/dsp_seqc_mixer.svh"
+    `include "./components/dsp_math/dsp_layr_mixer.svh"
 endpackage
