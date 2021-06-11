@@ -19,8 +19,11 @@ class dsp_base_seqc extends uvm_sequence #(datagen_seqi);
     bit bitstream[];
 
     // settings
-    int tr_pldsz = 1024;
-    t_modulation tr_mod = BPSK;
+    int                             tr_pldsz = 1024;
+    t_modulation                    tr_mod = BPSK;
+    real                            tr_sym_f = 1.0;
+    real                            tr_rsmp_f = 2.0;
+    real                            tr_car_f = 0.0;
 endclass
 
 //--------------------------------------------------------------------------------------------------------------------------------
@@ -40,7 +43,10 @@ task dsp_base_seqc::body();
     end
 
     // other settings
-    datagen_seqi_i.tr_mod = tr_mod;
+    datagen_seqi_i.tr_mod           = tr_mod;
+    datagen_seqi_i.tr_sym_f         = tr_sym_f;
+    datagen_seqi_i.tr_rsmp_f        = tr_rsmp_f;
+    datagen_seqi_i.tr_car_f         = tr_car_f;
 
     start_item(datagen_seqi_i);
     finish_item(datagen_seqi_i);
