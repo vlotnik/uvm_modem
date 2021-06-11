@@ -34,8 +34,11 @@ function void demo_basemod_test::build_phase(uvm_phase phase);
 
     // modulator
     `uvm_object_create(basemod_base_seqc, seqc_h)
-    seqc_h.tr_pldsz = 100;
-    seqc_h.tr_mod = QPSK;
+    seqc_h.tr_pldsz                 = 100;
+    seqc_h.tr_mod                   = QPSK;
+    seqc_h.tr_sym_f                 = 1.0;
+    seqc_h.tr_rsmp_f                = 8.0;
+    seqc_h.tr_car_f                 = 2.0;
 
     // modulator
     `uvm_component_create(basemod_envr, basemod_envr_h)
@@ -49,7 +52,8 @@ function void demo_basemod_test::connect_phase(uvm_phase phase);
     seqc_h.datagen_seqr_h = basemod_envr_h.datagen_seqr_i;
     // basemod_envr_h.dsp_symf_h.datagen_seqr_o = if_ddc_agnt_h.datagen_seqr_h;
     // basemod_envr_h.dsp_mapp_h.datagen_seqr_o = if_ddc_agnt_h.datagen_seqr_h;
-    basemod_envr_h.dsp_rsmp_h.datagen_seqr_o = if_ddc_agnt_h.datagen_seqr_h;
+    // basemod_envr_h.dsp_rsmp_h.datagen_seqr_o = if_ddc_agnt_h.datagen_seqr_h;
+    basemod_envr_h.dsp_mixr_h.datagen_seqr_o = if_ddc_agnt_h.datagen_seqr_h;
 endfunction
 
 task demo_basemod_test::run_phase(uvm_phase phase);
