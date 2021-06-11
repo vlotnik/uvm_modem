@@ -14,6 +14,7 @@ class basemod_envr extends uvm_env;
     dsp_layr_sym_framer             dsp_symf_h;
     dsp_layr_iq_mapper              dsp_mapp_h;
     dsp_layr_resampler              dsp_rsmp_h;
+    dsp_layr_mixer                  dsp_mixr_h;
 endclass
 
 //--------------------------------------------------------------------------------------------------------------------------------
@@ -24,6 +25,7 @@ function void basemod_envr::build_phase(uvm_phase phase);
     `uvm_component_create(dsp_layr_sym_framer,  dsp_symf_h)
     `uvm_component_create(dsp_layr_iq_mapper,   dsp_mapp_h)
     `uvm_component_create(dsp_layr_resampler,   dsp_rsmp_h)
+    `uvm_component_create(dsp_layr_mixer,       dsp_mixr_h)
 endfunction
 
 function void basemod_envr::connect_phase(uvm_phase phase);
@@ -32,4 +34,5 @@ function void basemod_envr::connect_phase(uvm_phase phase);
 
     dsp_symf_h.datagen_seqr_o = dsp_mapp_h.datagen_seqr_i;
     dsp_mapp_h.datagen_seqr_o = dsp_rsmp_h.datagen_seqr_i;
+    dsp_rsmp_h.datagen_seqr_o = dsp_mixr_h.datagen_seqr_i;
 endfunction
