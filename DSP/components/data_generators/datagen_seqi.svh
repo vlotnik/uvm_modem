@@ -17,6 +17,7 @@ class datagen_seqi extends uvm_sequence_item;
     t_modulation                    tr_mod = BPSK;          // modulation
     real                            tr_sym_f = 1.0;         // symbol frequency
     real                            tr_rsmp_f = 2.0;        // resampling frequency
+    real                            tr_car_f = 0.0;         // carrier frequency
 
     extern function void do_copy(uvm_object rhs);
 endclass
@@ -41,4 +42,5 @@ function void datagen_seqi::do_copy(uvm_object rhs);
     this.tr_mod                     = that.tr_mod;
     this.tr_sym_f                   = that.tr_sym_f;
     this.tr_rsmp_f                  = that.tr_rsmp_f;
+    this.tr_car_f                   = that.tr_car_f;
 endfunction
