@@ -37,4 +37,8 @@ package pkg_vrf_dsp_components;
     `include "./components/dsp_math/dspmath_mixer.svh"
     `include "./components/dsp_math/dsp_seqc_mixer.svh"
     `include "./components/dsp_math/dsp_layr_mixer.svh"
+
+    // summator
+    `include "./components/dsp_math/dsp_seqc_summator.svh"
+    `include "./components/dsp_math/dsp_layr_summator.svh"
 endpackage
