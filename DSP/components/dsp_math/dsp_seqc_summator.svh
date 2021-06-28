@@ -62,7 +62,7 @@ function void dsp_seqc_summator::parse_item();
     // add non orthogonality
     dist_i = dist_i + (dist_q * $sin(ort));
 
-    datagen_seqi_o.iq_i[0] = $rtoi(dist_i);
+    datagen_seqi_o.iq_i[0] = dist_i;
 
     // add zero shift
     datagen_seqi_o.iq_i[0] += zsc_i;
