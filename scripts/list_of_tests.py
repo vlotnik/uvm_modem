@@ -13,5 +13,6 @@ def get_list_of_tests():
 
     # build and simulate
     tb_path.append([1, current_path + "/rtl_modem/src/components/math/tb_sin_cos_table"])
+    tb_path.append([1, current_path + "/rtl_modem/src/components/math/tb_complex_multiplier"])
 
     return tb_path
