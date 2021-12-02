@@ -2,9 +2,9 @@
 // name : pipe_seqi
 //--------------------------------------------------------------------------------------------------------------------------------
 class pipe_seqi #(
-      DATA_WIDTH = 10
+      DW = 10
 ) extends raxi_seqi;
-    `uvm_object_param_utils(pipe_seqi #(DATA_WIDTH))
+    `uvm_object_param_utils(pipe_seqi #(DW))
     `uvm_object_new
 
     extern function void post_randomize();
@@ -18,7 +18,7 @@ class pipe_seqi #(
     extern function string i2string();
     extern function string o2string();
 
-    localparam DATA_MAX = 2**(DATA_WIDTH) - 1;
+    localparam DATA_MAX = 2**(DW) - 1;
 
     int iv;
     int id;
@@ -30,7 +30,7 @@ endclass
 // IMPLEMENTATION
 //--------------------------------------------------------------------------------------------------------------------------------
 function void pipe_seqi::post_randomize();
-    bit[DATA_WIDTH-1:0] raxi_data;
+    bit[DW-1:0] raxi_data;
 
     iv = $urandom_range(0, 1);
     if (iv == 1) begin
@@ -40,14 +40,14 @@ function void pipe_seqi::post_randomize();
     // rAXI
     raxi_data = id;
     this.valid = iv;
-    this.data = new[DATA_WIDTH];
+    this.data = new[DW];
     // foreach (raxi_data[ii])
     //     this.data[ii] = raxi_data[ii];
      this.data = {<<{raxi_data}};
 endfunction
 
 function void pipe_seqi::raxi2this_i(raxi_seqi raxi_seqi_h);
-    bit[DATA_WIDTH-1:0] raxi_data;
+    bit[DW-1:0] raxi_data;
 
     // foreach (raxi_data[ii])
     //     raxi_data[ii] = raxi_seqi_h.data[ii];
@@ -58,7 +58,7 @@ function void pipe_seqi::raxi2this_i(raxi_seqi raxi_seqi_h);
 endfunction
 
 function void pipe_seqi::raxi2this_o(raxi_seqi raxi_seqi_h);
-    bit[DATA_WIDTH-1:0] raxi_data;
+    bit[DW-1:0] raxi_data;
 
     // foreach (raxi_data[ii])
     //     raxi_data[ii] = raxi_seqi_h.data[ii];

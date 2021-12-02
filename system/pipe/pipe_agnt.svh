@@ -2,11 +2,11 @@
 // name : pipe_agnt
 //--------------------------------------------------------------------------------------------------------------------------------
 class pipe_agnt #(
-      DATA_WIDTH = 10
-    , DATA_DEPTH = 256
+      DW = 10
+    , SIZE = 256
     , PIPE_CE = 0
 ) extends uvm_agent;
-    `uvm_component_param_utils(pipe_agnt #(DATA_WIDTH, DATA_DEPTH, PIPE_CE))
+    `uvm_component_param_utils(pipe_agnt #(DW, SIZE, PIPE_CE))
     `uvm_component_new
 
     // functions
@@ -15,30 +15,30 @@ class pipe_agnt #(
 
     // objects
     virtual raxi_bfm #(
-          .DATA_WIDTH(DATA_WIDTH)
-    )                               raxi_bfm_i;
+          .DW(DW)
+    )                                   raxi_bfm_i;
     virtual raxi_bfm #(
-          .DATA_WIDTH(DATA_WIDTH)
-    )                               raxi_bfm_o;
+          .DW(DW)
+    )                                   raxi_bfm_o;
 
-    raxi_seqr                       raxi_seqr_h;
+    raxi_seqr                           raxi_seqr_h;
 
     raxi_drvr #(
-          .DATA_WIDTH(DATA_WIDTH)
-    )                               raxi_drvr_h;
+          .DW(DW)
+    )                                   raxi_drvr_h;
 
     raxi_mont #(
-          .DATA_WIDTH(DATA_WIDTH)
-    )                               raxi_mont_i;
+          .DW(DW)
+    )                                   raxi_mont_i;
     raxi_mont #(
-          .DATA_WIDTH(DATA_WIDTH)
-    )                               raxi_mont_o;
+          .DW(DW)
+    )                                   raxi_mont_o;
 
     pipe_scrb #(
-          .DATA_WIDTH(DATA_WIDTH)
-        , .DATA_DEPTH(DATA_DEPTH)
+          .DW(DW)
+        , .SIZE(SIZE)
         , .PIPE_CE(PIPE_CE)
-    )                               pipe_scrb_h;
+    )                                   pipe_scrb_h;
 endclass
 
 //--------------------------------------------------------------------------------------------------------------------------------
@@ -49,14 +49,14 @@ function void pipe_agnt::build_phase(uvm_phase phase);
     `uvm_component_create(uvm_sequencer #(raxi_seqi), raxi_seqr_h)
 
     // build driver
-    `uvm_component_create(raxi_drvr #(DATA_WIDTH), raxi_drvr_h)
+    `uvm_component_create(raxi_drvr #(DW), raxi_drvr_h)
 
     // build monitor
-    `uvm_component_create(raxi_mont #(DATA_WIDTH), raxi_mont_i)
-    `uvm_component_create(raxi_mont #(DATA_WIDTH), raxi_mont_o)
+    `uvm_component_create(raxi_mont #(DW), raxi_mont_i)
+    `uvm_component_create(raxi_mont #(DW), raxi_mont_o)
 
     // build scoreboard
-    `uvm_component_create(pipe_scrb #(DATA_WIDTH, DATA_DEPTH, PIPE_CE), pipe_scrb_h)
+    `uvm_component_create(pipe_scrb #(DW, SIZE, PIPE_CE), pipe_scrb_h)
 endfunction
 
 function void pipe_agnt::connect_phase(uvm_phase phase);
