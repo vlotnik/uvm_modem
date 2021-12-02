@@ -2,6 +2,7 @@
 
 base_run_sim:
 	vsim -64 -c -voptargs="+acc" \
+	-g GPDW=${CONFIG_GPDW} \
 	-g FULL_TABLE=${CONFIG_FULL_TABLE} \
 	-g PHASE_W=${CONFIG_PHASE_W} \
 	-g SINCOS_W=${CONFIG_SINCOS_W} \
@@ -18,6 +19,7 @@ base_run_sim:
 
 base_run_sim_gui:
 	vsim -64 -voptargs="+acc" \
+	-g GPDW=${CONFIG_GPDW} \
 	-g FULL_TABLE=${CONFIG_FULL_TABLE} \
 	-g PHASE_W=${CONFIG_PHASE_W} \
 	-g SINCOS_W=${CONFIG_SINCOS_W} \

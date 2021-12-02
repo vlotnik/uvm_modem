@@ -36,6 +36,8 @@ DEF_LIB = ${LIB_PATH}/work
 	+incdir+${UVM_PATH}/common \
 	-dpiheader ${UVM_PATH}/DSP/libraries/lib_c_math.h ${UVM_PATH}/DSP/libraries/lib_c_math.c \
 	-L rtl_modem \
-	-work ${DEF_LIB} hdl_classes/sincos_bfm.sv \
+	-work ${DEF_LIB} ${UVM_PATH}/system/raxi/raxi_bfm.sv \
+	-work ${DEF_LIB} ${UVM_PATH}/system/raxi/pkg_raxi.sv \
+	-work ${DEF_LIB} ${UVM_PATH}/system/pipe/pkg_pipe.sv \
 	-work ${DEF_LIB} hdl_classes/pkg_sincos.sv \
 	-work ${DEF_LIB} tb_sin_cos_table.sv

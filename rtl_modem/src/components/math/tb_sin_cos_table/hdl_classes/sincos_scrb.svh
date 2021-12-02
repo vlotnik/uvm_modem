@@ -4,34 +4,44 @@
 `uvm_analysis_imp_decl(_i)
 `uvm_analysis_imp_decl(_o)
 
-class sincos_scrb extends uvm_scoreboard;
-    `uvm_component_param_utils(sincos_scrb)
+class sincos_scrb #(
+      GPDW = 10
+    , PIPE_CE = 0
+    , PHASE_W = 12
+    , SINCOS_W = 16
+) extends raxi_scrb;
+    `uvm_component_param_utils(sincos_scrb #(GPDW, PIPE_CE, PHASE_W, SINCOS_W))
     `uvm_component_new
 
     // base UVM functions
     extern function void build_phase(uvm_phase phase);
-    extern function void report_phase(uvm_phase phase);
 
-    uvm_analysis_imp_i #(sincos_seqi, sincos_scrb) sincos_aprt_i;
-    uvm_analysis_imp_o #(sincos_seqi, sincos_scrb) sincos_aprt_o;
+    uvm_analysis_imp_i #(raxi_seqi, sincos_scrb #(GPDW, PIPE_CE, PHASE_W, SINCOS_W)) raxi_aprt_i;
+    uvm_analysis_imp_o #(raxi_seqi, sincos_scrb #(GPDW, PIPE_CE, PHASE_W, SINCOS_W)) raxi_aprt_o;
 
-    sincos_seqi sincos_seqi_queue_i[$];
-    sincos_seqi sincos_seqi_queue_o[$];
-
-    // LATENCY
-    int latency_cnt = 0;
+    // sim model
+    sim_sin_cos_table_fg #(
+          .GPDW(GPDW)
+        , .PIPE_CE(PIPE_CE)
+        , .PHASE_W(PHASE_W)
+        , .SINCOS_W(SINCOS_W)
+    )                               sim_sin_cos_table_fg_h;
 
     // settings
-    bit data_good = 0;
-    int fail_cnt = 0;
-    int max_value = 2 ** 15 - 1;
-    string test_name = "";
-    string file_name;
-    int fid_result;
+    sincos_seqi #(
+          .GPDW(GPDW)
+        , .PHASE_W(PHASE_W)
+        , .SINCOS_W(SINCOS_W)
+    )                               sincos_seqi_i;
+    sincos_seqi #(
+          .GPDW(GPDW)
+        , .PHASE_W(PHASE_W)
+        , .SINCOS_W(SINCOS_W)
+    )                               sincos_seqi_o;
 
     // functions
-    extern virtual function void write_i(sincos_seqi sincos_seqi_h);
-    extern virtual function void write_o(sincos_seqi sincos_seqi_h);
+    extern virtual function void write_i(raxi_seqi raxi_seqi_h);
+    extern virtual function void write_o(raxi_seqi raxi_seqi_h);
     extern function void processing();
 endclass
 
@@ -39,68 +49,56 @@ endclass
 // IMPLEMENTATION
 //--------------------------------------------------------------------------------------------------------------------------------
 function void sincos_scrb::build_phase(uvm_phase phase);
-    sincos_aprt_i = new("sincos_aprt_i", this);
-    sincos_aprt_o = new("sincos_aprt_o", this);
+    raxi_aprt_i = new("raxi_aprt_i", this);
+    raxi_aprt_o = new("raxi_aprt_o", this);
+
+    `uvm_object_create(sincos_seqi #(GPDW, PHASE_W, SINCOS_W), sincos_seqi_i)
+    `uvm_object_create(sincos_seqi #(GPDW, PHASE_W, SINCOS_W), sincos_seqi_o)
+
+    `uvm_object_create(sim_sin_cos_table_fg #(GPDW, PIPE_CE, PHASE_W, SINCOS_W), sim_sin_cos_table_fg_h);
 endfunction
 
-function void sincos_scrb::write_i(sincos_seqi sincos_seqi_h);
-    sincos_seqi_queue_i.push_back(sincos_seqi_h);
+function void sincos_scrb::write_i(raxi_seqi raxi_seqi_h);
+    raxi_seqi_queue_i.push_back(raxi_seqi_h);
+    `uvm_info("SCRB", $sformatf("\nPING... sequence with %s", raxi_seqi_h.convert2string()), UVM_FULL);
 endfunction
 
-function void sincos_scrb::write_o(sincos_seqi sincos_seqi_h);
-    sincos_seqi_queue_o.push_back(sincos_seqi_h);
+function void sincos_scrb::write_o(raxi_seqi raxi_seqi_h);
+    raxi_seqi_queue_o.push_back(raxi_seqi_h);
+    `uvm_info("SCRB", $sformatf("\n...PONG sequence with %s", raxi_seqi_h.convert2string()), UVM_FULL);
     processing();
 endfunction
 
 function void sincos_scrb::processing();
-    sincos_seqi sincos_seqi_i;
-    sincos_seqi sincos_seqi_o;
+    raxi_seqi raxi_seqi_sim_i;
+    raxi_seqi raxi_seqi_sim_o;
+    raxi_seqi raxi_seqi_o;
     string data_str;
 
-    sincos_seqi_o = sincos_seqi_queue_o.pop_front();
+    raxi_seqi_sim_i = raxi_seqi_queue_i.pop_front();
+    `uvm_object_create(raxi_seqi, raxi_seqi_sim_o);
+    sim_sin_cos_table_fg_h.simulate(raxi_seqi_sim_i, raxi_seqi_sim_o);
+    raxi_seqi_o = raxi_seqi_queue_o.pop_front();
 
-    if (latency_cnt == 0) begin
-        sincos_seqi_i = sincos_seqi_queue_i.pop_front();
-        sincos_seqi_i.sin = c_math_sin(sincos_seqi_i.phase, max_value, 12);
-        sincos_seqi_i.cos = c_math_cos(sincos_seqi_i.phase, max_value, 12);
-        `uvm_info("SEQC", $sformatf("PING... sequence with %s", sincos_seqi_i.convert2string()), UVM_FULL);
+    // get data from rAXI
+    sincos_seqi_i.raxi2this_i(raxi_seqi_sim_i);
+    sincos_seqi_i.raxi2this_o(raxi_seqi_sim_o);
+    sincos_seqi_o.raxi2this_o(raxi_seqi_o);
 
-        sincos_seqi_o.phase = sincos_seqi_i.phase;
-        `uvm_info("SEQC", $sformatf("...PONG sequence with %s", sincos_seqi_o.convert2string()), UVM_FULL);
+    data_good = 1;
+    data_str = {
+          "\n"
+        , "input data  : ", sincos_seqi_i.i2string()
+        , "\n"
+        , "got from RTL: ", sincos_seqi_o.o2string()
+        , "\n"
+        , "got from SIM: ", sincos_seqi_i.o2string()
+        , "\n"
+    };
 
-        data_good = 1;
-        data_str = {
-                  "\n"
-                , "got from RTL: ", sincos_seqi_o.convert2string()
-                , "\n"
-                , "got from SIM: ", sincos_seqi_i.convert2string()
-            };
-
-        if (!sincos_seqi_i.compare(sincos_seqi_o)) begin
-            `uvm_error("FAIL", data_str)
-            fail_cnt++;
-        end else
-            `uvm_info("PASS", data_str, UVM_HIGH)
-    end else begin
-        `uvm_info("LATENCY", $sformatf("skip item because of latency, %0d left", latency_cnt), UVM_NONE);
-        latency_cnt--;
-    end
-endfunction
-
-//--------------------------------------------------------------------------------------------------------------------------------
-// IMPLEMENTATION
-//--------------------------------------------------------------------------------------------------------------------------------
-function void sincos_scrb::report_phase(uvm_phase phase);
-    // file_name = $sformatf("_result/sincos_scrb_%s.RESULT", test_name);
-    // fid_result = $fopen(file_name, "w");
-
-    if (fail_cnt > 0 || data_good == 0) begin
-        `uvm_info("TEST_FAILED", "", UVM_NONE)
-        // $fwrite(fid_result, "FAIL");
-    end else begin
-        `uvm_info("TEST_PASSED", "", UVM_NONE)
-        // $fwrite(fid_result, "PASS");
-    end
-
-    // $fclose(fid_result);
+    if (!sincos_seqi_i.compare(sincos_seqi_o)) begin
+        `uvm_error("FAIL", data_str)
+        fail_cnt++;
+    end else
+        `uvm_info("PASS", data_str, UVM_HIGH)
 endfunction

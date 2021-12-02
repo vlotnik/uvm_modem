@@ -1,47 +1,112 @@
 //--------------------------------------------------------------------------------------------------------------------------------
 // name : sincos_seqi
 //--------------------------------------------------------------------------------------------------------------------------------
-class sincos_seqi extends uvm_sequence_item;
-    `uvm_object_utils(sincos_seqi)
+class sincos_seqi #(
+      GPDW = 10
+    , PHASE_W = 12
+    , SINCOS_W = 12
+) extends raxi_seqi;
+    `uvm_object_utils(sincos_seqi #(GPDW, PHASE_W, SINCOS_W))
     `uvm_object_new
 
     extern function void post_randomize();
     extern function bit do_compare(uvm_object rhs, uvm_comparer comparer);
-    extern function string convert2string();
 
-    rand int phase_v[];
-    rand int phase;
-    int sin;
-    int cos;
+    // rAXI converters
+    extern function void raxi2this_i(raxi_seqi raxi_seqi_h);
+    extern function void raxi2this_o(raxi_seqi raxi_seqi_h);
 
-    constraint c_phase {
-        phase inside{[0:4095]};
-    }
+    // data to string converters
+    extern function string i2string();
+    extern function string o2string();
 
-    constraint c_phase_v {
-        foreach(phase_v[i])
-            phase_v[i] inside {[0:1]};
-        phase_v.size inside {[5:5]};
-        phase_v.sum == 1;
-    }
+    localparam GP_MAX = 2**(GPDW) - 1;
+    localparam PHASE_MAX = 2**(PHASE_W) - 1;
+
+    localparam RAXI_DWI = GPDW + PHASE_W;
+    localparam RAXI_DWO = GPDW + SINCOS_W*2;
+
+    int igp;
+    int iphase_v;
+    int iphase;
+    int ogp;
+    int osincos_v;
+    int osin;
+    int ocos;
+
+    bit[PHASE_W-1:0]                    raxi_data_iphase;
+    bit[GPDW-1:0]                       raxi_data_igp;
+    bit[RAXI_DWI-1:0]                   raxi_data_i;
+    bit[SINCOS_W-1:0]                   raxi_data_osin;
+    bit[SINCOS_W-1:0]                   raxi_data_ocos;
+    bit[GPDW-1:0]                       raxi_data_ogp;
+    bit[RAXI_DWO-1:0]                   raxi_data_o;
 endclass
 
 //--------------------------------------------------------------------------------------------------------------------------------
 // IMPLEMENTATION
 //--------------------------------------------------------------------------------------------------------------------------------
 function void sincos_seqi::post_randomize();
-    int length;
-    length = phase_v.size();
+    iphase_v = $urandom_range(0, 1);
+    if (iphase_v == 1) begin
+        igp = $urandom_range(0, GP_MAX);
+        iphase = $urandom_range(0, PHASE_MAX);
+    end
 
-    if (phase_v[length - 1] == 1) begin
-        phase_v[length - 2] = phase_v[length - 1];
-        phase_v[length - 1] = 0;
-    end;
+    // rAXI
+    raxi_data_iphase = iphase;
+    raxi_data_igp = igp;
+    raxi_data_i = {raxi_data_igp, raxi_data_iphase};
+    this.valid = iphase_v;
+    this.data = {<<{raxi_data_i}};
 endfunction
 
-function string sincos_seqi::convert2string();
+function void sincos_seqi::raxi2this_i(raxi_seqi raxi_seqi_h);
+    raxi_data_i = {<<{raxi_seqi_h.data}};
+    {raxi_data_igp, raxi_data_iphase} = raxi_data_i;
+
+    this.iphase_v = raxi_seqi_h.valid;
+    this.iphase = raxi_data_iphase;
+    this.igp = raxi_data_igp;
+endfunction
+
+function void sincos_seqi::raxi2this_o(raxi_seqi raxi_seqi_h);
+    raxi_data_o = {<<{raxi_seqi_h.data}};
+    {raxi_data_ogp, raxi_data_ocos, raxi_data_osin} = raxi_data_o;
+
+    this.osincos_v = raxi_seqi_h.valid;
+    this.osin = $signed(raxi_data_osin);
+    this.ocos = $signed(raxi_data_ocos);
+    this.ogp = raxi_data_ogp;
+endfunction
+
+function string sincos_seqi::i2string();
+    string s_v;
+    string s_gp;
+    string s_phase;
     string s;
-    s = $sformatf("phase = %6d; sin = %6d, cos = %6d", phase, sin, cos);
+
+    s_v = $sformatf("valid = %0d", iphase_v);
+    s_gp = $sformatf("GP = %0d", igp);
+    s_phase = $sformatf("phase = %0d", iphase);
+
+    s = {s_v, " ", s_gp, " ", s_phase};
+    return s;
+endfunction
+
+function string sincos_seqi::o2string();
+    string s_v;
+    string s_gp;
+    string s_sin;
+    string s_cos;
+    string s;
+
+    s_v = $sformatf("valid = %0d", osincos_v);
+    s_gp = $sformatf("GP = %0d", ogp);
+    s_sin = $sformatf("sin = %0d", osin);
+    s_cos = $sformatf("cos = %0d", ocos);
+
+    s = {s_v, " ", s_gp, " ", s_sin, " ", s_cos};
     return s;
 endfunction
 
@@ -52,6 +117,11 @@ function bit sincos_seqi::do_compare(uvm_object rhs, uvm_comparer comparer);
     same = super.do_compare(rhs, comparer);
 
     $cast(RHS, rhs);
-    same = (phase == RHS.phase && sin == RHS.sin && cos == RHS.cos) && same;
+    same = (
+           osincos_v == RHS.osincos_v
+        && ogp == RHS.ogp
+        && osin == RHS.osin
+        && ocos == RHS.ocos
+    ) && same;
     return same;
 endfunction

@@ -1,9 +1,11 @@
 //--------------------------------------------------------------------------------------------------------------------------------
 // name : sincos_envr_cfg
 //--------------------------------------------------------------------------------------------------------------------------------
-class sincos_envr_cfg extends uvm_object;
-    `uvm_object_utils(sincos_envr_cfg)
+class sincos_envr_cfg #(
+      RAXI_DWI
+    , RAXI_DWO
+) extends raxi_envr_cfg #(RAXI_DWI, RAXI_DWO);
+    `uvm_object_param_utils(sincos_envr_cfg #(RAXI_DWI, RAXI_DWO))
     `uvm_object_new
 
-    virtual sincos_bfm              sincos_bfm_h;
 endclass

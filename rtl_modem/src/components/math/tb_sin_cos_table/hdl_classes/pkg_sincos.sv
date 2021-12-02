@@ -6,17 +6,13 @@ package pkg_sincos;
     `include "uvm_macros.svh"
     `include "common_macros.svh"
 
-    // import pkg_vrf_dsp_components::*;
+    import pkg_raxi::*;
+    import pkg_pipe::*;
 
     `include "sincos_seqi.svh"
     typedef uvm_sequencer #(sincos_seqi) sincos_seqr;
 
-    `include "sincos_drvr.svh"
-
-    typedef uvm_analysis_port #(sincos_seqi) sincos_aprt;
-    `include "sincos_mont.svh"
-
-    `include "sincos_cvrb.svh"
+    `include "sim_sin_cos_table_fg.svh"
     `include "sincos_scrb.svh"
 
     `include "sincos_agnt_cfg.svh"
