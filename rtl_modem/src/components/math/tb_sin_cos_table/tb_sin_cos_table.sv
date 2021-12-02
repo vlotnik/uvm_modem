@@ -15,6 +15,8 @@ module tb_sin_cos_table;
 
     // main settings
     parameter                       FULL_TABLE = 0;
+    parameter                       PHASE_W = 12;
+    parameter                       SINCOS_W = 16;
     parameter                       PIPE_CE = 0;
 
 //--------------------------------------------------------------------------------------------------------------------------------
@@ -36,6 +38,8 @@ module tb_sin_cos_table;
 //--------------------------------------------------------------------------------------------------------------------------------
     sin_cos_table #(
           .g_full_table             (FULL_TABLE)
+        , .g_phase_w                (PHASE_W)
+        , .g_sincos_w               (SINCOS_W)
         , .g_pipe_ce                (PIPE_CE)
     )
     dut(

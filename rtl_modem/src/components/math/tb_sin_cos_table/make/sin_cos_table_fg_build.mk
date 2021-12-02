@@ -1,5 +1,5 @@
 ## +-----------------------------------------------------------------------------------------------------------------------------+
-## | sin_cos_table_fg                                                                                                            |
+## | sin_cos_table_fg
 ## +-----------------------------------------------------------------------------------------------------------------------------+
 
 # path to Src
@@ -12,17 +12,17 @@ DIR = ${INCLUDE}/${SRC_PATH_ROOT}
 LIB_PATH = _libs
 DEF_LIB = ${LIB_PATH}/work
 
-    create_libs: ##                 create RTL libraries
+    create_libs: ##                     create RTL libraries
 	vlib ${LIB_PATH}
-	vlib ${LIB_PATH}/demodulators
+	vlib ${LIB_PATH}/rtl_modem
 
-    map_libs: ##                    map RTL libraries
-	vmap demodulators 				_libs/demodulators
+    map_libs: ##                        map RTL libraries
+	vmap rtl_modem 				_libs/rtl_modem
 
-    comp_vhd: ##                    compile RTL sources
-	vcom -64 -2008 -work demodulators ${DIR}/src/components/math/sin_cos_table.vhdl
+    comp_vhd: ##                        compile RTL sources
+	vcom -64 -2008 -work rtl_modem ${DIR}/src/components/math/sin_cos_table.vhdl
 
-    ## build:                       build RTL
+    ## build:                           build RTL
     build: \
 	clean \
 	create_libs \
@@ -30,13 +30,12 @@ DEF_LIB = ${LIB_PATH}/work
 	comp_vhd \
 	build_done
 
-    comp_sv: ##                     compile SIM sources
+    comp_sv: ##                         compile SIM sources
 	vlog -64 \
 	-work ${DEF_LIB} \
 	+incdir+${UVM_PATH}/common \
-	-dpiheader hdl_classes/cmath_lib.h \
-	hdl_classes/cmath_lib.c \
-	-L demodulators \
+	-dpiheader ${UVM_PATH}/DSP/libraries/lib_c_math.h ${UVM_PATH}/DSP/libraries/lib_c_math.c \
+	-L rtl_modem \
 	-work ${DEF_LIB} hdl_classes/sincos_bfm.sv \
 	-work ${DEF_LIB} hdl_classes/pkg_sincos.sv \
 	-work ${DEF_LIB} tb_sin_cos_table.sv

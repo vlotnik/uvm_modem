@@ -1,27 +1,26 @@
 ## +-----------------------------------------------------------------------------------------------------------------------------+
-## | sin_cos_table_fg, makefile                                                                                                  |
+## | sin_cos_table_fg, makefile
 ## +-----------------------------------------------------------------------------------------------------------------------------+
 
 include make/sin_cos_table_fg_build.mk
-include make/sin_cos_table_fg_run_solid.mk
-include make/sin_cos_table_fg_run_pipe.mk
-include make/sin_cos_table_fg_runs.mk
+include ${INCLUDE}/test_base_cmds.mk
+include make/sin_cos_table_fg_run_base.mk
 
-	CONFIG_FULL_TABLE = 1
+	CONFIG_FULL_TABLE = 0
+	CONFIG_PHASE_W = 12
+	CONFIG_SINCOS_W = 16
+	CONFIG_PIPE_CE = 1
+	CONFIG_SV_SEED = random
 
-    ## uvm:                         compile SIM sources and run all tests
+    ## uvm:                             compile SIM sources and run all tests
     uvm: \
 	comp_sv \
-	solid_run_sim \
-	solid_copytr \
-	pipe_run_sim \
-	pipe_copytr \
+	base_run_sim
 
-    ## all:                         compile all sources and run all tests
+    ## all:                             compile all sources and run all tests
     all: \
 	build \
-	uvm \
-	rm_transcript
+	uvm
 
-    run_tests: ##                   launch Python script
+    run_tests: ##                       launch Python script
 	python3.7 scripts/tb_sin_cos_table.py

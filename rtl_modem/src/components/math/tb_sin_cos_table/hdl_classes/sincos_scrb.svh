@@ -33,7 +33,6 @@ class sincos_scrb extends uvm_scoreboard;
     extern virtual function void write_i(sincos_seqi sincos_seqi_h);
     extern virtual function void write_o(sincos_seqi sincos_seqi_h);
     extern function void processing();
-    extern virtual function int get_ideal_value(int phase, int max = (2 ** 15 - 1), bit is_sin = 1);
 endclass
 
 //--------------------------------------------------------------------------------------------------------------------------------
@@ -62,8 +61,8 @@ function void sincos_scrb::processing();
 
     if (latency_cnt == 0) begin
         sincos_seqi_i = sincos_seqi_queue_i.pop_front();
-        sincos_seqi_i.sin = get_ideal_value(sincos_seqi_i.phase, max_value, 1);
-        sincos_seqi_i.cos = get_ideal_value(sincos_seqi_i.phase, max_value, 0);
+        sincos_seqi_i.sin = c_math_sin(sincos_seqi_i.phase, max_value, 12);
+        sincos_seqi_i.cos = c_math_cos(sincos_seqi_i.phase, max_value, 12);
         `uvm_info("SEQC", $sformatf("PING... sequence with %s", sincos_seqi_i.convert2string()), UVM_FULL);
 
         sincos_seqi_o.phase = sincos_seqi_i.phase;
@@ -86,24 +85,6 @@ function void sincos_scrb::processing();
         `uvm_info("LATENCY", $sformatf("skip item because of latency, %0d left", latency_cnt), UVM_NONE);
         latency_cnt--;
     end
-endfunction
-
-function int sincos_scrb::get_ideal_value(int phase, int max = (2 ** 15 - 1), bit is_sin = 1);
-    real c_pi = 3.1415926535897932384626433832795;
-    real phase_r;
-    real result_r;
-    real result_i;
-    real result_floor;
-    int result_int;
-    phase_r = $itor(phase) * 2.0 * c_pi / 4096.0;
-    if (is_sin == 1)
-        result_r = cmath_sin(phase_r);
-    else
-        result_r = cmath_cos(phase_r);
-    result_i = result_r * $itor(max);
-    result_floor = $floor(result_i + 0.5);
-    result_int = $rtoi(result_floor);
-    return result_int;
 endfunction
 
 //--------------------------------------------------------------------------------------------------------------------------------
