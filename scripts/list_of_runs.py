@@ -1,11 +1,11 @@
 import os
 import subprocess
-from fnmatch import fnmatch
 
 def run_clean(tb_path):
     current_path = os.getcwd()
     os.chdir(tb_path)
     subprocess.call(["make", "clean"])
+    subprocess.call(["make", "clean_log"])
     os.chdir(current_path)
 
 def run_all(tb_path, output):

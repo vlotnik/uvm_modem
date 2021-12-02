@@ -37,20 +37,28 @@ all_results = ""
 
 dlmtr = "----------------------------------------------------------------------------------------------------------------------\n"
 
+if (sys.argv[1] == "clean"):
+    subprocess.call(["make", "clean_rest"])
+
 # main loop
 for f in range(len(tb_path)):
+    test_start_time = time.time()
+
     # if (tb_path[f][0] == 1):
     if (sys.argv[1] == "clean"):
         run_clean(tb_path[f][1])
-    if (sys.argv[1] == "build"):
-        run_build(tb_path[f][1], sys.argv[2])
     if (sys.argv[1] == "all"):
         if (tb_path[f][0] == 0):
             run_build(tb_path[f][1], sys.argv[2])
         if (tb_path[f][0] == 1):
             run_all(tb_path[f][1], sys.argv[2])
+    if (sys.argv[1] == "build"):
+        run_build(tb_path[f][1], sys.argv[2])
     if (sys.argv[1] == "run_tests"):
-        run_tests(tb_path[f][1], sys.argv[2])
+        if (tb_path[f][0] == 0):
+            run_build(tb_path[f][1], sys.argv[2])
+        else:
+            run_tests(tb_path[f][1], sys.argv[2])
 
     list_of_results = print_results(tb_path[f][1])
     all_results += dlmtr
@@ -63,16 +71,25 @@ for f in range(len(tb_path)):
         current_result = check_results(list_of_results[resf])
         # print(current_result + "\t" + list_of_results[resf])
         all_results += (current_result + "\t" + list_of_results[resf] + "\n")
+
+    test_finish_time = time.time()
+    test_total_time = test_finish_time - test_start_time
+
+    all_results += "TIME:\t" + time.strftime("%H:%M:%S", time.gmtime(test_total_time)) + "\n"
     all_results += "\n"
 
 all_results += dlmtr
-all_results += "DONE\n"
 
 # get finish time
 finish_time = time.time()
+total_time = finish_time - start_time
 
-all_results += "start time: \t" + time.strftime("%b %d %Y %H:%M:%S", time.gmtime(start_time)) + "\n"
-all_results += "finish_time:\t" + time.strftime("%b %d %Y %H:%M:%S", time.gmtime(finish_time)) + "\n"
+all_results += "PING:\t" + time.strftime("%b %d %Y %H:%M:%S", time.gmtime(start_time)) + "\n"
+all_results += "PONG:\t" + time.strftime("%b %d %Y %H:%M:%S", time.gmtime(finish_time)) + "\n"
+all_results += "TIME:\t" + time.strftime("%H:%M:%S", time.gmtime(total_time)) + "\n"
+
+all_results += dlmtr
+all_results += "DONE"
 
 if (sys.argv[1] == "all" or sys.argv[1] == "build" or sys.argv[1] == "run_tests"):
     print(all_results)
