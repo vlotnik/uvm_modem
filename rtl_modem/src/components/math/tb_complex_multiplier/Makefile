@@ -1,13 +1,14 @@
 ## +-----------------------------------------------------------------------------------------------------------------------------+
-## | complex_multiplier_fg, makefile                                                                                             |
+## | complex_multiplier_fg, makefile
 ## +-----------------------------------------------------------------------------------------------------------------------------+
 
 include make/complex_multiplier_fg_build.mk
-include make/complex_multiplier_fg_run_default.mk
-include make/complex_multiplier_fg_runs.mk
+include ${INCLUDE}/test_base_cmds.mk
+include make/complex_multiplier_fg_run_base.mk
 
-	CONFIG_A_DW = 9
-	CONFIG_B_DW = 15
+	CONFIG_GPDW = 10
+	CONFIG_A_W = 9
+	CONFIG_B_W = 15
 	CONFIG_TYPE = 1
 	CONFIG_PIPE_CE = 0
 	CONFIG_CONJ_MULT = 1
@@ -15,14 +16,12 @@ include make/complex_multiplier_fg_runs.mk
     ## uvm:                         compile SIM sources and run all tests
     uvm: \
 	comp_sv \
-	solid_run_sim \
-	pipe_run_sim \
+	base_run_sim
 
     ## all:                         compile all sources and run all tests
     all: \
 	build \
-	uvm \
-	rm_transcript
+	uvm
 
     run_tests: ##                   launch Python script
 	python3.7 scripts/tb_complex_multiplier_fg.py

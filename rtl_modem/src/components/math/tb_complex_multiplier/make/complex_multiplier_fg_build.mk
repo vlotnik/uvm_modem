@@ -36,7 +36,11 @@ DEF_LIB = ${LIB_PATH}/work
 	vlog -64 \
 	-work ${DEF_LIB} \
 	+incdir+${UVM_PATH}/common \
+	-dpiheader ${UVM_PATH}/DSP/libraries/lib_c_math.h ${UVM_PATH}/DSP/libraries/lib_c_math.c \
 	-L rtl_modem \
-	-work ${DEF_LIB} hdl_classes/compmult_bfm.sv \
+	-work ${DEF_LIB} ${UVM_PATH}/system/raxi/raxi_bfm.sv \
+	-work ${DEF_LIB} ${UVM_PATH}/system/raxi/pkg_raxi.sv \
+	-work ${DEF_LIB} ${UVM_PATH}/system/pipe/pkg_pipe.sv \
+	-work ${DEF_LIB} ${UVM_PATH}/DSP/libraries/pkg_sv_demodulators_types.sv \
 	-work ${DEF_LIB} hdl_classes/pkg_compmult.sv \
 	-work ${DEF_LIB} tb_complex_multiplier.sv

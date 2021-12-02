@@ -1,78 +1,89 @@
 //--------------------------------------------------------------------------------------------------------------------------------
 // name : sim_complex_multiplier
 //--------------------------------------------------------------------------------------------------------------------------------
-class sim_complex_multiplier extends uvm_object;
-    `uvm_object_utils(sim_complex_multiplier)
-    `uvm_object_new
+class sim_complex_multiplier #(
+      GPDW
+    , A_W
+    , B_W
+    , PIPE_CE
+    , CONJ_MULT
+) extends uvm_object;
+    `uvm_object_param_utils(sim_complex_multiplier #(GPDW, A_W, B_W, PIPE_CE, CONJ_MULT))
 
-    // settings
-    bit conj_mult = 0;
-    localparam LATENCY = 4;
+    localparam                      LATENCY = 4;
+    localparam                      A_MAX = 2**A_W-1;
+    localparam                      B_MAX = 2**B_W-1;
+    localparam                      C_W = A_W + B_W + 1;
+    localparam                      PIPE_WIDTH = GPDW + C_W * 2;
 
-    typedef struct{
-        int i;
-        int q;
-    } t_iq;
+    localparam                      RAXI_DWI = GPDW + A_W*2 + B_W*2;
+    localparam                      RAXI_DWO = GPDW + C_W*2;
 
-    protected bit[0:LATENCY-1] pipe_v;
-    protected int pipe_ia_i[LATENCY];
-    protected int pipe_ia_q[LATENCY];
-    protected int pipe_ib_i[LATENCY];
-    protected int pipe_ib_q[LATENCY];
-    protected t_iq a, b, c;
+    // variables
+    int a_re;
+    int a_im;
+    int b_re;
+    int b_im;
+    int c_re;
+    int c_im;
 
-    extern function automatic void simulate(ref compmult_seqi compmult_seqi_h);
-    extern virtual function t_iq get_ideal_value(t_iq a, t_iq b, bit conj_mult);
+    // components
+    sim_pipe #(
+          .DW(PIPE_WIDTH)
+        , .SIZE(LATENCY)
+        , .PIPE_CE(PIPE_CE)
+    )                               sim_pipe_h;
+    raxi_seqi                       raxi_seqi_h_pipe;
+
+    extern function new(string name = "");
+    extern function automatic void simulate(raxi_seqi raxi_seqi_i, ref raxi_seqi raxi_seqi_o);
 endclass
 
 //--------------------------------------------------------------------------------------------------------------------------------
 // IMPLEMENTATION
 //--------------------------------------------------------------------------------------------------------------------------------
-function automatic void sim_complex_multiplier::simulate(ref compmult_seqi compmult_seqi_h);
-    compmult_seqi_h.ov = pipe_v[LATENCY-1];
-    compmult_seqi_h.oc_i = c.i;
-    compmult_seqi_h.oc_q = c.q;
-
-    pipe_v = {compmult_seqi_h.iv, pipe_v[0:LATENCY-2]};
-
-    if (pipe_v[3] == 1) begin
-        a.i = pipe_ia_i[2];
-        a.q = pipe_ia_q[2];
-        b.i = pipe_ib_i[2];
-        b.q = pipe_ib_q[2];
-        c = get_ideal_value(a, b, conj_mult);
-    end
-    if (pipe_v[2] == 1) begin
-        pipe_ia_i[2] = pipe_ia_i[1];
-        pipe_ia_q[2] = pipe_ia_q[1];
-        pipe_ib_i[2] = pipe_ib_i[1];
-        pipe_ib_q[2] = pipe_ib_q[1];
-    end
-    if (pipe_v[1] == 1) begin
-        pipe_ia_i[1] = pipe_ia_i[0];
-        pipe_ia_q[1] = pipe_ia_q[0];
-        pipe_ib_i[1] = pipe_ib_i[0];
-        pipe_ib_q[1] = pipe_ib_q[0];
-    end
-    if (pipe_v[0] == 1) begin
-        pipe_ia_i[0] = compmult_seqi_h.ia_i;
-        pipe_ia_q[0] = compmult_seqi_h.ia_q;
-        pipe_ib_i[0] = compmult_seqi_h.ib_i;
-        pipe_ib_q[0] = compmult_seqi_h.ib_q;
-    end
-
+function sim_complex_multiplier::new(string name = "");
+    `uvm_object_create(sim_pipe #(RAXI_DWO, LATENCY, PIPE_CE), sim_pipe_h)
+    `uvm_object_create(raxi_seqi, raxi_seqi_h_pipe)
 endfunction
 
-function sim_complex_multiplier::t_iq sim_complex_multiplier::get_ideal_value(t_iq a, t_iq b, bit conj_mult);
-    t_iq c;
+function automatic void sim_complex_multiplier::simulate(raxi_seqi raxi_seqi_i, ref raxi_seqi raxi_seqi_o);
+    bit[A_W-1:0] raxi_data_a_re;
+    bit[A_W-1:0] raxi_data_a_im;
+    bit[B_W-1:0] raxi_data_b_re;
+    bit[B_W-1:0] raxi_data_b_im;
+    bit[GPDW-1:0] raxi_data_igp;
+    bit[RAXI_DWI-1:0] raxi_data_i;
+    bit[C_W-1:0] raxi_data_c_re;
+    bit[C_W-1:0] raxi_data_c_im;
+    bit[GPDW-1:0] raxi_data_pipe_gp;
+    bit[RAXI_DWO-1:0] raxi_data_pipe;
 
-    if (conj_mult == 0) begin
-        c.i = a.i * b.i - a.q * b.q;
-        c.q = a.q * b.i + a.i * b.q;
-    end else begin
-        c.i = a.i * b.i + a.q * b.q;
-        c.q = a.q * b.i - a.i * b.q;
-    end
+    // parse input transaction
+    raxi_data_i = {<<{raxi_seqi_i.data}};
+    {raxi_data_igp, raxi_data_b_im, raxi_data_b_re, raxi_data_a_im, raxi_data_a_re} = raxi_data_i;
 
-    return c;
+    // C function
+    a_re = $signed(raxi_data_a_re);
+    a_im = $signed(raxi_data_a_im);
+    b_re = $signed(raxi_data_b_re);
+    b_im = $signed(raxi_data_b_im);
+    c_re = c_math_complex_mult_re(a_re, a_im, b_re, b_im, CONJ_MULT);
+    c_im = c_math_complex_mult_im(a_re, a_im, b_re, b_im, CONJ_MULT);
+
+    // SV function
+    // c = f_complex_mult(compmult_seqi_h.iiqa, compmult_seqi_h.iiqb, CONJ_MULT);
+    // c_re = c.i;
+    // c_im = c.q;
+
+    // pipeline input
+    raxi_data_c_re = c_re;
+    raxi_data_c_im = c_im;
+    raxi_data_pipe_gp = raxi_data_igp;
+    raxi_data_pipe = {raxi_data_pipe_gp, raxi_data_c_im, raxi_data_c_re};
+    raxi_seqi_h_pipe.valid = raxi_seqi_i.valid;
+    raxi_seqi_h_pipe.data = {<<{raxi_data_pipe}};
+
+    // pipeline
+    sim_pipe_h.simulate(raxi_seqi_h_pipe, raxi_seqi_o);
 endfunction

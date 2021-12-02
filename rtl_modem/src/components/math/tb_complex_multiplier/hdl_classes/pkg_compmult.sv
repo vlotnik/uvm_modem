@@ -6,17 +6,14 @@ package pkg_compmult;
     `include "uvm_macros.svh"
     `include "common_macros.svh"
 
+    import pkg_sv_demodulators_types::*;
+
+    import pkg_raxi::*;
+    import pkg_pipe::*;
+
     `include "compmult_seqi.svh"
-    typedef uvm_sequencer #(compmult_seqi) compmult_seqr;
-
-    `include "compmult_drvr.svh"
-
-    typedef uvm_analysis_port #(compmult_seqi) compmult_aprt;
-    `include "compmult_mont.svh"
 
     `include "sim_complex_multiplier.svh"
-
-    // `include "compmult_cvrb.svh"
     `include "compmult_scrb.svh"
 
     `include "compmult_agnt_cfg.svh"
@@ -28,5 +25,6 @@ package pkg_compmult;
     `include "compmult_base_seqc.svh"
     `include "compmult_base_test.svh"
 
-    `include "./default/compmult_test_default.svh"
+    import "DPI-C" function int c_math_complex_mult_re(int a_re, int a_im, int b_re, int b_im, int conj_mult);
+    import "DPI-C" function int c_math_complex_mult_im(int a_re, int a_im, int b_re, int b_im, int conj_mult);
 endpackage

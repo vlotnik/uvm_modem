@@ -14,11 +14,16 @@ module tb_complex_multiplier;
     import pkg_compmult::*;
 
     // main settings
-    parameter                           A_DW = 12;
-    parameter                           B_DW = 12;
+    parameter                           GPDW = 10;
+    parameter                           A_W = 12;
+    parameter                           B_W = 12;
     parameter                           TYPE = 0;
-    parameter                           PIPE_CE = 0;
     parameter                           CONJ_MULT = 0;
+    parameter                           PIPE_CE = 0;
+
+    localparam                          C_DW = A_W + B_W + 1;
+    localparam                          RAXI_DWI = GPDW + A_W*2 + B_W*2;
+    localparam                          RAXI_DWO = GPDW + C_DW*2;
 
 //--------------------------------------------------------------------------------------------------------------------------------
 // clock generator
@@ -30,45 +35,74 @@ module tb_complex_multiplier;
 //--------------------------------------------------------------------------------------------------------------------------------
 // interfaces
 //--------------------------------------------------------------------------------------------------------------------------------
-    compmult_bfm #(
-          .A_DW(A_DW)
-        , .B_DW(B_DW)
-    )                                   compmult_bfm_h();
-
-    assign compmult_bfm_h.iclk          = clk;
+    raxi_bfm #(
+          .DW(RAXI_DWI)
+    )                               raxi_bfm_i();
+    raxi_bfm #(
+          .DW(RAXI_DWO)
+    )                               raxi_bfm_o();
 
 //--------------------------------------------------------------------------------------------------------------------------------
 // DUT connection
+    bit                                 idut_clk;
+    bit                                 idut_v;
+    bit[GPDW-1:0]                       idut_gp;
+    bit[A_W-1:0]                        idut_a_i;
+    bit[A_W-1:0]                        idut_a_q;
+    bit[B_W-1:0]                        idut_b_i;
+    bit[B_W-1:0]                        idut_b_q;
+    bit                                 odut_v;
+    bit[GPDW-1:0]                       odut_gp;
+    bit[C_DW-1:0]                       odut_c_i;
+    bit[C_DW-1:0]                       odut_c_q;
 //--------------------------------------------------------------------------------------------------------------------------------
     complex_multiplier_wrap #(
-          .g_a_dw                       (A_DW)
-        , .g_b_dw                       (B_DW)
+          .g_gpdw                       (GPDW)
+        , .g_a_w                        (A_W)
+        , .g_b_w                        (B_W)
         , .g_type                       (TYPE)
         , .g_conj_mult                  (CONJ_MULT)
+        , .g_pipe_ce                    (PIPE_CE)
     )
     dut (
-          .iCLK                         (compmult_bfm_h.iclk)
-        , .iV                           (compmult_bfm_h.iv)
-        , .iA_I                         (compmult_bfm_h.ia_i)
-        , .iA_Q                         (compmult_bfm_h.ia_q)
-        , .iB_I                         (compmult_bfm_h.ib_i)
-        , .iB_Q                         (compmult_bfm_h.ib_q)
-        , .oV                           (compmult_bfm_h.ov)
-        , .oC_I                         (compmult_bfm_h.oc_i)
-        , .oC_Q                         (compmult_bfm_h.oc_q)
+          .iCLK                         (idut_clk)
+        , .iV                           (idut_v)
+        , .iGP                          (idut_gp)
+        , .iA_I                         (idut_a_i)
+        , .iA_Q                         (idut_a_q)
+        , .iB_I                         (idut_b_i)
+        , .iB_Q                         (idut_b_q)
+        , .oV                           (odut_v)
+        , .oGP                          (odut_gp)
+        , .oC_I                         (odut_c_i)
+        , .oC_Q                         (odut_c_q)
     );
+
+    assign idut_clk = clk;
+    assign idut_v = raxi_bfm_i.valid;
+    assign {idut_gp, idut_b_q, idut_b_i, idut_a_q, idut_a_i} = raxi_bfm_i.data;
+
+    assign raxi_bfm_i.clk = idut_clk;
+    assign raxi_bfm_o.clk = idut_clk;
+    assign raxi_bfm_o.valid = odut_v;
+    assign raxi_bfm_o.data = {odut_gp, odut_c_q, odut_c_i};
 
 //--------------------------------------------------------------------------------------------------------------------------------
 // UVM test
 //--------------------------------------------------------------------------------------------------------------------------------
-    typedef compmult_test_default #(
-          A_DW
-        , B_DW
-        , CONJ_MULT
-    )                                   compmult_test_default_h;
+    typedef compmult_base_test #(
+          .GPDW(GPDW)
+        , .A_W(A_W)
+        , .B_W(B_W)
+        , .CONJ_MULT(CONJ_MULT)
+        , .PIPE_CE(PIPE_CE)
+        , .RAXI_DWI(RAXI_DWI)
+        , .RAXI_DWO(RAXI_DWO)
+    )                                   compmult_base_test_h;
 
     initial begin
-        uvm_config_db #(virtual compmult_bfm #(A_DW, B_DW))::set(null, "*", "compmult_bfm_h", compmult_bfm_h);
+        uvm_config_db #(virtual raxi_bfm #(RAXI_DWI))::set(null, "*", "raxi_bfm_i", raxi_bfm_i);
+        uvm_config_db #(virtual raxi_bfm #(RAXI_DWO))::set(null, "*", "raxi_bfm_o", raxi_bfm_o);
         run_test();
     end
 

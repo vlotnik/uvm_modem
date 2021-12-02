@@ -2,79 +2,135 @@
 // name : compmult_seqi
 //--------------------------------------------------------------------------------------------------------------------------------
 class compmult_seqi #(
-      A_DW = 12
-    , B_DW = 12
-) extends uvm_sequence_item;
-    `uvm_object_param_utils(compmult_seqi #(A_DW, B_DW))
+      GPDW = 10
+    , A_W = 12
+    , B_W = 12
+) extends raxi_seqi;
+    `uvm_object_param_utils(compmult_seqi #(GPDW, A_W, B_W))
     `uvm_object_new
 
     extern function void post_randomize();
     extern function bit do_compare(uvm_object rhs, uvm_comparer comparer);
+
+    // rAXI converters
+    extern function void raxi2this_i(raxi_seqi raxi_seqi_h);
+    extern function void raxi2this_o(raxi_seqi raxi_seqi_h);
+
+    // data to string converters
     extern function string i2string();
     extern function string o2string();
 
-    localparam A_ABS_MIN = 2**(A_DW - 1);
-    localparam A_ABS_MAX = 2**(A_DW) - 1;
-    localparam B_ABS_MIN = 2**(B_DW - 1);
-    localparam B_ABS_MAX = 2**(B_DW) - 1;
+    localparam RAXI_DATA_WIDTH_I = GPDW + A_W*2 + B_W*2;
+    localparam C_W = A_W + B_W + 1;
+    localparam RAXI_DATA_WIDTH_O = GPDW + C_W*2;
+    localparam GP_MAX = 2**(GPDW) - 1;
+    localparam A_ABS_MIN = 2**(A_W - 1);
+    localparam A_ABS_MAX = 2**(A_W) - 1;
+    localparam B_ABS_MIN = 2**(B_W - 1);
+    localparam B_ABS_MAX = 2**(B_W) - 1;
 
-    int iv;
-    int ia_i;
-    int ia_q;
-    int ib_i;
-    int ib_q;
-    int ov;
-    int oc_i;
-    int oc_q;
+    int iiq_v;
+    int igp;
+    t_iq iiqa;
+    t_iq iiqb;
+    int ogp;
+    int oiq_v;
+    t_iq oiq;
+
+    bit[A_W-1:0]                    raxi_data_iiqa_i;
+    bit[A_W-1:0]                    raxi_data_iiqa_q;
+    bit[B_W-1:0]                    raxi_data_iiqb_i;
+    bit[B_W-1:0]                    raxi_data_iiqb_q;
+    bit[GPDW-1:0]                   raxi_data_igp;
+    bit[RAXI_DATA_WIDTH_I-1:0]      raxi_data_i;
+    bit[C_W-1:0]                    raxi_data_oiq_i;
+    bit[C_W-1:0]                    raxi_data_oiq_q;
+    bit[GPDW-1:0]                   raxi_data_ogp;
+    bit[RAXI_DATA_WIDTH_O-1:0]      raxi_data_o;
 endclass
 
 //--------------------------------------------------------------------------------------------------------------------------------
 // IMPLEMENTATION
 //--------------------------------------------------------------------------------------------------------------------------------
 function void compmult_seqi::post_randomize();
-    iv = $urandom_range(0, 1);
-    if (iv == 1) begin
-        ia_i = $urandom_range(0, A_ABS_MAX) - A_ABS_MIN;
-        ia_q = $urandom_range(0, A_ABS_MAX) - A_ABS_MIN;
-        ib_i = $urandom_range(0, B_ABS_MAX) - B_ABS_MIN;
-        ib_q = $urandom_range(0, B_ABS_MAX) - B_ABS_MIN;
+    iiq_v = $urandom_range(0, 1);
+    if (iiq_v == 1) begin
+        igp = $urandom_range(0, GP_MAX);
+        iiqa.i = $urandom_range(0, A_ABS_MAX) - A_ABS_MIN;
+        iiqa.q = $urandom_range(0, A_ABS_MAX) - A_ABS_MIN;
+        iiqb.i = $urandom_range(0, B_ABS_MAX) - B_ABS_MIN;
+        iiqb.q = $urandom_range(0, B_ABS_MAX) - B_ABS_MIN;
     end
+
+    // rAXI
+    raxi_data_iiqa_i = iiqa.i;
+    raxi_data_iiqa_q = iiqa.q;
+    raxi_data_iiqb_i = iiqb.i;
+    raxi_data_iiqb_q = iiqb.q;
+    raxi_data_igp = igp;
+    raxi_data_i = {raxi_data_igp, raxi_data_iiqb_q, raxi_data_iiqb_i, raxi_data_iiqa_q, raxi_data_iiqa_i};
+    this.valid = iiq_v;
+    this.data = {<<{raxi_data_i}};
+endfunction
+
+function void compmult_seqi::raxi2this_i(raxi_seqi raxi_seqi_h);
+    raxi_data_i = {<<{raxi_seqi_h.data}};
+    {raxi_data_igp, raxi_data_iiqb_q, raxi_data_iiqb_i, raxi_data_iiqa_q, raxi_data_iiqa_i} = raxi_data_i;
+
+    this.iiq_v = raxi_seqi_h.valid;
+    this.iiqa.i = $signed(raxi_data_iiqa_i);
+    this.iiqa.q = $signed(raxi_data_iiqa_q);
+    this.iiqb.i = $signed(raxi_data_iiqb_i);
+    this.iiqb.q = $signed(raxi_data_iiqb_q);
+    this.igp = raxi_data_igp;
+endfunction
+
+function void compmult_seqi::raxi2this_o(raxi_seqi raxi_seqi_h);
+    raxi_data_o = {<<{raxi_seqi_h.data}};
+    {raxi_data_ogp, raxi_data_oiq_q, raxi_data_oiq_i} = raxi_data_o;
+
+    this.oiq_v = raxi_seqi_h.valid;
+    this.oiq.i = $signed(raxi_data_oiq_i);
+    this.oiq.q = $signed(raxi_data_oiq_q);
+    this.ogp = raxi_data_ogp;
 endfunction
 
 function string compmult_seqi::i2string();
-    string s_iv;
+    string s_v;
+    string s_gp;
     string s_a;
     string s_b;
     string s;
 
-    s_iv = $sformatf("iv = %1d", iv);
-    if (ia_q >= 0)
-        s_a = $sformatf("|A = %0d + j * %0d|", ia_i, ia_q);
+    s_v = $sformatf("valid = %0d", iiq_v);
+    s_gp = $sformatf("GP = %0d", igp);
+    if (iiqa.q >= 0)
+        s_a = $sformatf("|A = %0d + j * %0d|", iiqa.i, iiqa.q);
     else
-        s_a = $sformatf("|A = %0d - j * %0d|", ia_i, -ia_q);
-    if (ib_q >= 0)
-        s_b = $sformatf("|B = %0d + j * %0d|", ib_i, ib_q);
+        s_a = $sformatf("|A = %0d - j * %0d|", iiqa.i, -iiqa.q);
+    if (iiqb.q >= 0)
+        s_b = $sformatf("|B = %0d + j * %0d|", iiqb.i, iiqb.q);
     else
-        s_b = $sformatf("|B = %0d - j * %0d|", ib_i, -ib_q);
+        s_b = $sformatf("|B = %0d - j * %0d|", iiqb.i, -iiqb.q);
 
-    s = {s_iv, " ", s_a, " ", s_b};
-
+    s = {s_v, " ", s_gp, " ", s_a, " ", s_b};
     return s;
 endfunction
 
 function string compmult_seqi::o2string();
-    string s_ov;
+    string s_v;
+    string s_gp;
     string s_c;
     string s;
 
-    s_ov = $sformatf("ov = %1d", ov);
-    if (oc_q >= 0)
-        s_c = $sformatf("|C = %0d + j * %0d|", oc_i, oc_q);
+    s_v = $sformatf("valid = %0d", oiq_v);
+    s_gp = $sformatf("GP = %0d", ogp);
+    if (oiq.q >= 0)
+        s_c = $sformatf("|C = %0d + j * %0d|", oiq.i, oiq.q);
     else
-        s_c = $sformatf("|C = %0d - j * %0d|", oc_i, -oc_q);
+        s_c = $sformatf("|C = %0d - j * %0d|", oiq.i, -oiq.q);
 
-    s = {s_ov, " ", s_c};
-
+    s = {s_v, " ", s_gp, " ", s_c};
     return s;
 endfunction
 
@@ -86,9 +142,10 @@ function bit compmult_seqi::do_compare(uvm_object rhs, uvm_comparer comparer);
 
     $cast(RHS, rhs);
     same = (
-           ov == RHS.ov
-        && oc_i == RHS.oc_i
-        && oc_q == RHS.oc_q
+           oiq_v == RHS.oiq_v
+        && ogp == RHS.ogp
+        && oiq.i == RHS.oiq.i
+        && oiq.q == RHS.oiq.q
     ) && same;
     return same;
 endfunction
