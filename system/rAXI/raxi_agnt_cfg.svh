@@ -2,16 +2,16 @@
 // name : raxi_agnt_cfg
 //--------------------------------------------------------------------------------------------------------------------------------
 class raxi_agnt_cfg #(
-      RAXI_DW_I
-    , RAXI_DW_O
+      RAXI_DWI
+    , RAXI_DWO
 ) extends uvm_object;
-    `uvm_object_param_utils(raxi_agnt_cfg #(RAXI_DW_I, RAXI_DW_O))
+    `uvm_object_param_utils(raxi_agnt_cfg #(RAXI_DWI, RAXI_DWO))
     `uvm_object_new
 
     virtual raxi_bfm #(
-          .DATA_WIDTH(RAXI_DW_I)
-    )                               raxi_bfm_i;
+          .DW(RAXI_DWI)
+    )                                   raxi_bfm_i;
     virtual raxi_bfm #(
-          .DATA_WIDTH(RAXI_DW_O)
-    )                               raxi_bfm_o;
+          .DW(RAXI_DWO)
+    )                                   raxi_bfm_o;
 endclass
