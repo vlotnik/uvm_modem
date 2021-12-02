@@ -1,7 +1,6 @@
 ## | base
 
-base_run_sim:
-	vsim -64 -c -voptargs="+acc" \
+BASE_RUN_SIM_CMD = \
 	-g GPDW=${CONFIG_GPDW} \
 	-g FULL_TABLE=${CONFIG_FULL_TABLE} \
 	-g PHASE_W=${CONFIG_PHASE_W} \
@@ -9,7 +8,7 @@ base_run_sim:
 	-g PIPE_CE=${CONFIG_PIPE_CE} \
 	-L rtl_modem \
 	-L ${DEF_LIB} \
-	-sv_seed random \
+	-sv_seed ${CONFIG_SV_SEED} \
 	${DEF_LIB}.tb_sin_cos_table \
 	+UVM_VERBOSITY=UVM_FULL \
 	+UVM_TESTNAME=sincos_base_test \
@@ -17,22 +16,13 @@ base_run_sim:
 	-do "run -all" \
 	-do "quit"
 
+base_run_sim:
+	vsim -64 -c -voptargs="+acc" \
+	${BASE_RUN_SIM_CMD}
+
 base_run_sim_gui:
 	vsim -64 -voptargs="+acc" \
-	-g GPDW=${CONFIG_GPDW} \
-	-g FULL_TABLE=${CONFIG_FULL_TABLE} \
-	-g PHASE_W=${CONFIG_PHASE_W} \
-	-g SINCOS_W=${CONFIG_SINCOS_W} \
-	-g PIPE_CE=${CONFIG_PIPE_CE} \
-	-L rtl_modem \
-	-L ${DEF_LIB} \
-	-sv_seed random \
-	${DEF_LIB}.tb_sin_cos_table \
-	+UVM_VERBOSITY=UVM_HIGH \
-	+UVM_TESTNAME=sincos_base_test \
-	-do "wave.do" \
-	-do "run -all" \
-	-do "quit"
+	${BASE_RUN_SIM_CMD}
 
 base_uvm: \
 	comp_sv \
