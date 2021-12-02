@@ -43,16 +43,15 @@ module tb_sin_cos_table;
 //--------------------------------------------------------------------------------------------------------------------------------
 // DUT connection
     bit                                 idut_clk;
-    bit                                 idut_v;
-    bit[GPDW-1:0]                       idut_gp;
-    bit[PHASE_W-1:0]                    idut_phase;
-    bit                                 odut_v;
-    bit[GPDW-1:0]                       odut_gp;
-    bit[SINCOS_W-1:0]                   odut_sin;
-    bit[SINCOS_W-1:0]                   odut_cos;
+    bit                                 idut_valid;
+    bit[RAXI_DWI-1:0]                   idut_data;
+    bit                                 odut_valid;
+    bit[RAXI_DWO-1:0]                   odut_data;
 //--------------------------------------------------------------------------------------------------------------------------------
     sin_cos_table #(
-          .g_gpdw                       (GPDW)
+          .g_raxi_dwi                   (RAXI_DWI)
+        , .g_raxi_dwo                   (RAXI_DWO)
+        , .g_gpdw                       (GPDW)
         , .g_full_table                 (FULL_TABLE)
         , .g_phase_w                    (PHASE_W)
         , .g_sincos_w                   (SINCOS_W)
@@ -60,23 +59,20 @@ module tb_sin_cos_table;
     )
     dut(
           .iCLK                         (idut_clk)
-        , .iV                           (idut_v)
-        , .iGP                          (idut_gp)
-        , .iPHASE                       (idut_phase)
-        , .oV                           (odut_v)
-        , .oGP                          (odut_gp)
-        , .oSIN                         (odut_sin)
-        , .oCOS                         (odut_cos)
+        , .iVALID                       (idut_valid)
+        , .iDATA                        (idut_data)
+        , .oVALID                       (odut_valid)
+        , .oDATA                        (odut_data)
     );
 
-    assign idut_clk = clk;
-    assign idut_v = raxi_bfm_i.valid;
-    assign {idut_gp, idut_phase} = raxi_bfm_i.data;
+    assign idut_clk                     = clk;
+    assign idut_valid                   = raxi_bfm_i.valid;
+    assign idut_data                    = raxi_bfm_i.data;
 
-    assign raxi_bfm_i.clk = idut_clk;
-    assign raxi_bfm_o.clk = idut_clk;
-    assign raxi_bfm_o.valid = odut_v;
-    assign raxi_bfm_o.data = {odut_gp, odut_cos, odut_sin};
+    assign raxi_bfm_i.clk               = idut_clk;
+    assign raxi_bfm_o.clk               = idut_clk;
+    assign raxi_bfm_o.valid             = odut_valid;
+    assign raxi_bfm_o.data              = odut_data;
 
 //--------------------------------------------------------------------------------------------------------------------------------
 // UVM test
