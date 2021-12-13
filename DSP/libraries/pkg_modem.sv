@@ -7,6 +7,11 @@ package pkg_modem;
     // base types
     typedef real t_real_array[];
 
+    typedef struct{
+        int i;
+        int q;
+    } t_iq;
+
     // modulations
     typedef enum{
           BPSK
