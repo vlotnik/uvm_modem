@@ -12,7 +12,6 @@ dlmtr = "-----------------------------------------------------------------------
 
 result_folder = '_result'
 transcript_name = "transcript"
-total_result = "PASS"
 
 MAX_SEED = 2**31
 
@@ -60,13 +59,11 @@ def get_current_result():
     result_fail = re.findall(r"TEST_FAILED", data_src)
     result_pass = re.findall(r"TEST_PASSED", data_src)
     if (result_fail != []):
-        total_result = "FAIL"
         return "FAIL"
     else:
         if (result_pass != []):
             return "PASS"
         else:
-            total_result = "FAIL"
             return "FAIL"
 
 #---------------------------------------------------------------------------------------------------------------------------------
@@ -108,7 +105,7 @@ def get_result_time(start_time, finish_time):
 #---------------------------------------------------------------------------------------------------------------------------------
 # create result file
 #---------------------------------------------------------------------------------------------------------------------------------
-def make_result_file():
+def make_result_file(total_result):
     result_output_file_name = result_folder + "/tests.RESULT"
     fout = codecs.open(result_output_file_name, 'w', encoding="windows-1251")
     fout.write(total_result)

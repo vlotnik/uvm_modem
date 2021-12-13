@@ -12,6 +12,7 @@ start_time = time.time()
 #---------------------------------------------------------------------------------------------------------------------------------
 # result message
 #---------------------------------------------------------------------------------------------------------------------------------
+total_result = "PASS"
 tb_top_name = "sin_cos_table"
 all_results = make_som(tb_top_name)
 
@@ -55,6 +56,8 @@ for j in tests:
         call_uvm_test(uvm_name, config)
 
         current_result = get_current_result()
+        if (current_result == "FAIL"):
+            total_result = current_result
         copy_log_file(i, config["sv_seed"], current_result, test_name)
         current_result_str = get_current_result_str(current_result, test_name, config)
 
@@ -72,4 +75,4 @@ all_results += result_time
 # print result message
 #---------------------------------------------------------------------------------------------------------------------------------
 print(all_results)
-make_result_file()
+make_result_file(total_result)
