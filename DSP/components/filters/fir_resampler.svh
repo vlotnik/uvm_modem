@@ -11,15 +11,15 @@ class fir_resampler extends uvm_object;
     protected real ratio;
     protected real ratio_accumulator;
 
-    protected real ring_buffer_i[];
-    protected real ring_buffer_q[];
+    protected int ring_buffer_i[];
+    protected int ring_buffer_q[];
     protected int write_ptr;
     protected int read_ptr;
     protected real ram_addr;
     protected bit next_sample;
 
-    real result_i[$];
-    real result_q[$];
+    int result_i[$];
+    int result_q[$];
 
     extern function void set_coefficients(real coefficients[], int filter_length, int num_of_phases);
     extern function void set_resampler_ratio(real i_frequency, real o_frequency);
