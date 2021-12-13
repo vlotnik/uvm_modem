@@ -8,8 +8,8 @@ class dspmath_mixer extends uvm_object;
     protected real mix_step;
     protected real mix_accum;
     protected real phase;
-    protected real result_i[];
-    protected real result_q[];
+    protected int result_i[];
+    protected int result_q[];
 
     extern function void set_mix_freq(real mix_freq, real samp_freq);
     extern function automatic void mix(ref datagen_seqi h_datagen_seqi);
