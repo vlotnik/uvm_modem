@@ -23,10 +23,9 @@ task raxi_drvr::run_phase(uvm_phase phase);
         seq_item_port.get_next_item(raxi_seqi_h);
 
             @(posedge raxi_bfm_h.clk)
+            raxi_bfm_h.rst <= raxi_seqi_h.rst;
             raxi_bfm_h.valid <= raxi_seqi_h.valid;
-            if (raxi_seqi_h.valid == 1) begin
-                raxi_bfm_h.data <= {<<{raxi_seqi_h.data}};
-            end
+            raxi_bfm_h.data <= {<<{raxi_seqi_h.data}};
 
         seq_item_port.item_done();
     end

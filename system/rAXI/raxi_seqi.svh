@@ -6,7 +6,9 @@ class raxi_seqi extends uvm_sequence_item;
     `uvm_object_new
 
     extern function string convert2string();
+    extern function bit do_compare(uvm_object rhs, uvm_comparer comparer);
 
+    bit rst;
     bit valid;
     bit data[];
 endclass
@@ -24,4 +26,18 @@ function string raxi_seqi::convert2string();
 
     s = {s_v, " ", s_d};
     return s;
+endfunction
+
+function bit raxi_seqi::do_compare(uvm_object rhs, uvm_comparer comparer);
+    raxi_seqi RHS;
+    bit same;
+
+    same = super.do_compare(rhs, comparer);
+
+    $cast(RHS, rhs);
+    same = (
+           valid == RHS.valid
+        && data == RHS.data
+    ) && same;
+    return same;
 endfunction
