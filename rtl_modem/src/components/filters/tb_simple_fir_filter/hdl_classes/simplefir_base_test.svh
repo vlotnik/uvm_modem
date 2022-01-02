@@ -3,6 +3,7 @@
 //--------------------------------------------------------------------------------------------------------------------------------
 class simplefir_base_test #(
       G_NOF_TAPS
+    , G_COEF_DW
     , G_SAMPLE_DW
     , IRAXI_DW_COEF
     , IRAXI_DW
@@ -13,6 +14,7 @@ class simplefir_base_test #(
 
     typedef uvm_component_registry #(simplefir_base_test #(
           G_NOF_TAPS
+        , G_COEF_DW
         , G_SAMPLE_DW
         , IRAXI_DW_COEF
         , IRAXI_DW
@@ -61,6 +63,7 @@ class simplefir_base_test #(
     // sequences
     simplefir_seqc_coef #(
           .NOF_TAPS(G_NOF_TAPS)
+        , .G_COEF_DW(G_COEF_DW)
     )                                   simplefir_seqc_coef_h;
     simplefir_seqc_data #(
           .SAMPLE_DW(G_SAMPLE_DW)
@@ -69,6 +72,7 @@ class simplefir_base_test #(
     // scoreboard
     simplefir_scrb #(
           .NOF_TAPS(G_NOF_TAPS)
+        , .COEF_DW(G_COEF_DW)
         , .SAMPLE_DW(G_SAMPLE_DW)
     )                                   simplefir_scrb_h;
 endclass
@@ -99,11 +103,11 @@ function void simplefir_base_test::build_phase(uvm_phase phase);
     `uvm_component_create(raxi_mont #(ORAXI_DW), oraxi_mont_data)
 
     // build sequence
-    `uvm_component_create(simplefir_seqc_coef #(G_NOF_TAPS), simplefir_seqc_coef_h);
+    `uvm_component_create(simplefir_seqc_coef #(G_NOF_TAPS, G_COEF_DW), simplefir_seqc_coef_h);
     `uvm_component_create(simplefir_seqc_data #(G_SAMPLE_DW), simplefir_seqc_data_h);
 
     // build scoreboard
-    `uvm_component_create(simplefir_scrb #(G_NOF_TAPS, G_SAMPLE_DW), simplefir_scrb_h);
+    `uvm_component_create(simplefir_scrb #(G_NOF_TAPS, G_COEF_DW, G_SAMPLE_DW), simplefir_scrb_h);
 endfunction
 
 function void simplefir_base_test::connect_phase(uvm_phase phase);

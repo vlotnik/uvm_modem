@@ -3,8 +3,9 @@
 //--------------------------------------------------------------------------------------------------------------------------------
 class simplefir_seqc_coef #(
       NOF_TAPS = 32
+    , G_COEF_DW = 16
 ) extends uvm_sequence #(raxi_seqi);
-    `uvm_object_param_utils(simplefir_seqc_coef #(NOF_TAPS))
+    `uvm_object_param_utils(simplefir_seqc_coef #(NOF_TAPS, G_COEF_DW))
     `uvm_object_new
 
     extern task body();
@@ -20,7 +21,7 @@ endclass
 // IMPLEMENTATION
 //--------------------------------------------------------------------------------------------------------------------------------
 task simplefir_seqc_coef::body();
-    bit[15:0] coef;
+    bit[G_COEF_DW-1:0] coef;
 
     `uvm_object_create(raxi_seqi, raxi_seqi_h);
 
@@ -28,7 +29,7 @@ task simplefir_seqc_coef::body();
     fir_coefficients = filter_design_h.get_coefs_rcos(0.35, 0.1, NOF_TAPS);
     rg_firwr_cv = new[fir_coefficients.size];
     for (int ii = 0; ii < fir_coefficients.size; ii++)
-        rg_firwr_cv[ii] = $rtoi(fir_coefficients[ii] * $pow(2, 15));
+        rg_firwr_cv[ii] = $rtoi(fir_coefficients[ii] * $pow(2, G_COEF_DW-1));
 
     start_item(raxi_seqi_h);
         raxi_seqi_h.rst = 1;

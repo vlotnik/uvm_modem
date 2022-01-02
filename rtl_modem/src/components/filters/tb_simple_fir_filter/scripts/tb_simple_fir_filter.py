@@ -26,6 +26,7 @@ number_of_tests = 10
 
 config = {
       "g_nof_taps" : 32
+    , "g_coef_dw" : 16
     , "g_sample_dw" : 12
     , "sv_seed" : 0
 }
@@ -44,6 +45,7 @@ for j in tests:
         uvm_name = test_name + "_uvm"
 
         config["g_nof_taps"] = random.randint(8, 64)
+        config["g_coef_dw"] = random.randint(8, 16)
         config["g_sample_dw"] = random.randint(8, 16)
         config["sv_seed"] = random.randint(0, MAX_SEED)
 

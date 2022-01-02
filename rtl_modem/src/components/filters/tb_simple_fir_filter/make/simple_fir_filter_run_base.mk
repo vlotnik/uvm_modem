@@ -2,6 +2,7 @@
 
 BASE_RUN_SIM_CMD = \
 	-g G_NOF_TAPS=${CONFIG_G_NOF_TAPS} \
+	-g G_COEF_DW=${CONFIG_G_COEF_DW} \
 	-g G_SAMPLE_DW=${CONFIG_G_SAMPLE_DW} \
 	-L rtl_modem \
 	-L ${DEF_LIB} \

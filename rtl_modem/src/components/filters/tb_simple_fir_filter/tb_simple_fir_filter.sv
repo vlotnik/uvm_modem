@@ -15,9 +15,10 @@ module tb_simple_fir_filter;
 
     // main settings
     parameter                           G_NOF_TAPS = 32;
+    parameter                           G_COEF_DW = 16;
     parameter                           G_SAMPLE_DW = 12;
 
-    localparam                          IRAXI_DW_COEF = 16;
+    localparam                          IRAXI_DW_COEF = G_COEF_DW;
     localparam                          IRAXI_DW = G_SAMPLE_DW;
     localparam                          ORAXI_DW = 48;
 
@@ -50,7 +51,7 @@ module tb_simple_fir_filter;
     bit                                 idut_clk;
     bit                                 idut_coef_rst;
     bit                                 idut_coef_valid;
-    bit[15:0]                           idut_coef_data;
+    bit[IRAXI_DW_COEF-1:0]              idut_coef_data;
     bit                                 idut_valid;
     bit[IRAXI_DW-1:0]                   idut_data;
     bit                                 odut_valid;
@@ -59,6 +60,8 @@ module tb_simple_fir_filter;
     simple_fir_filter #(
           .g_nof_taps                   (G_NOF_TAPS)
         , .g_sample_dw                  (G_SAMPLE_DW)
+        , .g_coef_dw                    (G_COEF_DW)
+        , .g_iraxi_coef_dw              (IRAXI_DW_COEF)
         , .g_iraxi_dw                   (IRAXI_DW)
         , .g_oraxi_dw                   (ORAXI_DW)
     )
@@ -90,6 +93,7 @@ module tb_simple_fir_filter;
 //--------------------------------------------------------------------------------------------------------------------------------
     typedef simplefir_base_test #(
           .G_NOF_TAPS(G_NOF_TAPS)
+        , .G_COEF_DW(G_COEF_DW)
         , .G_SAMPLE_DW(G_SAMPLE_DW)
         , .IRAXI_DW_COEF(IRAXI_DW_COEF)
         , .IRAXI_DW(IRAXI_DW)

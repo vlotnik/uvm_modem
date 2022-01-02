@@ -7,6 +7,7 @@ include ${INCLUDE}/test_base_cmds.mk
 include make/simple_fir_filter_run_base.mk
 
 	CONFIG_G_NOF_TAPS = 19
+	CONFIG_G_COEF_DW = 16
 	CONFIG_G_SAMPLE_DW = 17
 	CONFIG_SV_SEED = random
 

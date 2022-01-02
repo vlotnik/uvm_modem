@@ -3,14 +3,14 @@
 //--------------------------------------------------------------------------------------------------------------------------------
 class sim_simple_fir_filter #(
       G_NOF_TAPS
+    , G_COEF_DW
     , G_SAMPLE_DW
 ) extends uvm_object;
-    `uvm_object_param_utils(sim_simple_fir_filter #(G_NOF_TAPS, G_SAMPLE_DW))
+    `uvm_object_param_utils(sim_simple_fir_filter #(G_NOF_TAPS, G_COEF_DW, G_SAMPLE_DW))
 
     localparam                          LATENCY = G_NOF_TAPS + 3;
 
     protected real coefficients[G_NOF_TAPS];
-    protected t_iq data[G_NOF_TAPS];
 
     // components
     fir_filter                          fir_filter_h;
@@ -42,7 +42,7 @@ function sim_simple_fir_filter::new(string name = "");
 endfunction
 
 function void sim_simple_fir_filter::add_coefficient(raxi_seqi raxi_seqi_h);
-    bit[15:0] coefficient;
+    bit[G_COEF_DW-1:0] coefficient;
 
     if (raxi_seqi_h.valid == 1) begin
         coefficient = {<<{raxi_seqi_h.data}};

@@ -25,7 +25,7 @@ task simplefir_seqc_data::body();
 
     repeat (1000) begin
         start_item(raxi_seqi_h);
-            raxi_seqi_h.valid = $urandom_range(0, 1);
+            raxi_seqi_h.valid = $urandom_range(1, 1);
             if (raxi_seqi_h.valid == 1) begin
                 data = $urandom_range(0, D_MAX) - D_MIN;
             end
