@@ -12,6 +12,7 @@ package pkg_vrf_dsp_components;
     // data generators
     `include "./components/data_generators/datagen_seqi.svh"
     typedef uvm_sequencer #(datagen_seqi) datagen_seqr;
+    typedef uvm_analysis_port #(datagen_seqi) datagen_aprt;
 
     // dsp base
     `include "./components/dsp_base/dsp_base_seqc.svh"
