@@ -6,11 +6,11 @@
 `uvm_analysis_imp_decl(_odata)
 
 class simplefir_scrb #(
-      NOF_TAPS
-    , COEF_DW
-    , SAMPLE_DW
+      G_NOF_TAPS
+    , G_COEF_DW
+    , G_SAMPLE_DW
 ) extends raxi_scrb;
-    `uvm_component_param_utils(simplefir_scrb #(NOF_TAPS, COEF_DW, SAMPLE_DW))
+    `uvm_component_param_utils(simplefir_scrb #(G_NOF_TAPS, G_COEF_DW, G_SAMPLE_DW))
     `uvm_component_new
 
     // base UVM functions
@@ -21,15 +21,15 @@ class simplefir_scrb #(
     raxi_seqi iraxi_seqi_queue_data[$];
     raxi_seqi oraxi_seqi_queue_data[$];
 
-    uvm_analysis_imp_icoef #(raxi_seqi, simplefir_scrb #(NOF_TAPS, COEF_DW, SAMPLE_DW)) iraxi_aprt_coef;
-    uvm_analysis_imp_idata #(raxi_seqi, simplefir_scrb #(NOF_TAPS, COEF_DW, SAMPLE_DW)) iraxi_aprt_data;
-    uvm_analysis_imp_odata #(raxi_seqi, simplefir_scrb #(NOF_TAPS, COEF_DW, SAMPLE_DW)) oraxi_aprt_data;
+    uvm_analysis_imp_icoef #(raxi_seqi, simplefir_scrb #(G_NOF_TAPS, G_COEF_DW, G_SAMPLE_DW)) iraxi_aprt_coef;
+    uvm_analysis_imp_idata #(raxi_seqi, simplefir_scrb #(G_NOF_TAPS, G_COEF_DW, G_SAMPLE_DW)) iraxi_aprt_data;
+    uvm_analysis_imp_odata #(raxi_seqi, simplefir_scrb #(G_NOF_TAPS, G_COEF_DW, G_SAMPLE_DW)) oraxi_aprt_data;
 
     // sim model
     sim_simple_fir_filter #(
-          .G_NOF_TAPS(NOF_TAPS)
-        , .G_COEF_DW(COEF_DW)
-        , .G_SAMPLE_DW(SAMPLE_DW)
+          .G_NOF_TAPS(G_NOF_TAPS)
+        , .G_COEF_DW(G_COEF_DW)
+        , .G_SAMPLE_DW(G_SAMPLE_DW)
     )                                   sim_simple_fir_filter_h;
 
     // functions
@@ -47,7 +47,7 @@ function void simplefir_scrb::build_phase(uvm_phase phase);
     iraxi_aprt_data = new("iraxi_aprt_data", this);
     oraxi_aprt_data = new("oraxi_aprt_data", this);
 
-    `uvm_object_create(sim_simple_fir_filter #(NOF_TAPS, COEF_DW, SAMPLE_DW), sim_simple_fir_filter_h);
+    `uvm_object_create(sim_simple_fir_filter #(G_NOF_TAPS, G_COEF_DW, G_SAMPLE_DW), sim_simple_fir_filter_h);
 endfunction
 
 function void simplefir_scrb::write_icoef(raxi_seqi raxi_seqi_h);

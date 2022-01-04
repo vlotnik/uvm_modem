@@ -18,9 +18,9 @@ module tb_simple_fir_filter;
     parameter                           G_COEF_DW = 16;
     parameter                           G_SAMPLE_DW = 12;
 
-    localparam                          IRAXI_DW_COEF = G_COEF_DW;
-    localparam                          IRAXI_DW = G_SAMPLE_DW;
-    localparam                          ORAXI_DW = 48;
+    localparam                          G_IRAXI_DW_COEF = G_COEF_DW;
+    localparam                          G_IRAXI_DW = G_SAMPLE_DW;
+    localparam                          G_ORAXI_DW = 48;
 
 //--------------------------------------------------------------------------------------------------------------------------------
 // clock generator
@@ -33,13 +33,13 @@ module tb_simple_fir_filter;
 // interfaces
 //--------------------------------------------------------------------------------------------------------------------------------
     raxi_bfm #(
-          .DW(IRAXI_DW_COEF)
+          .DW(G_IRAXI_DW_COEF)
     )                                   iraxi_bfm_coef();
     raxi_bfm #(
-          .DW(IRAXI_DW)
+          .DW(G_IRAXI_DW)
     )                                   iraxi_bfm();
     raxi_bfm #(
-          .DW(ORAXI_DW)
+          .DW(G_ORAXI_DW)
     )                                   oraxi_bfm();
 
     assign iraxi_bfm_coef.clk           = clk;
@@ -51,19 +51,19 @@ module tb_simple_fir_filter;
     bit                                 idut_clk;
     bit                                 idut_coef_rst;
     bit                                 idut_coef_valid;
-    bit[IRAXI_DW_COEF-1:0]              idut_coef_data;
+    bit[G_IRAXI_DW_COEF-1:0]            idut_coef_data;
     bit                                 idut_valid;
-    bit[IRAXI_DW-1:0]                   idut_data;
+    bit[G_IRAXI_DW-1:0]                 idut_data;
     bit                                 odut_valid;
-    bit[ORAXI_DW-1:0]                   odut_data;
+    bit[G_ORAXI_DW-1:0]                 odut_data;
 //--------------------------------------------------------------------------------------------------------------------------------
     simple_fir_filter #(
           .g_nof_taps                   (G_NOF_TAPS)
         , .g_sample_dw                  (G_SAMPLE_DW)
         , .g_coef_dw                    (G_COEF_DW)
-        , .g_iraxi_coef_dw              (IRAXI_DW_COEF)
-        , .g_iraxi_dw                   (IRAXI_DW)
-        , .g_oraxi_dw                   (ORAXI_DW)
+        , .g_iraxi_dw_coef              (G_IRAXI_DW_COEF)
+        , .g_iraxi_dw                   (G_IRAXI_DW)
+        , .g_oraxi_dw                   (G_ORAXI_DW)
     )
     dut(
           .iclk                         (idut_clk)
@@ -95,15 +95,15 @@ module tb_simple_fir_filter;
           .G_NOF_TAPS(G_NOF_TAPS)
         , .G_COEF_DW(G_COEF_DW)
         , .G_SAMPLE_DW(G_SAMPLE_DW)
-        , .IRAXI_DW_COEF(IRAXI_DW_COEF)
-        , .IRAXI_DW(IRAXI_DW)
-        , .ORAXI_DW(ORAXI_DW)
+        , .G_IRAXI_DW_COEF(G_IRAXI_DW_COEF)
+        , .G_IRAXI_DW(G_IRAXI_DW)
+        , .G_ORAXI_DW(G_ORAXI_DW)
     )                                   simplefir_base_test_h;
 
     initial begin
-        uvm_config_db #(virtual raxi_bfm #(IRAXI_DW_COEF))::set(null, "*", "iraxi_bfm_coef", iraxi_bfm_coef);
-        uvm_config_db #(virtual raxi_bfm #(IRAXI_DW))::set(null, "*", "iraxi_bfm", iraxi_bfm);
-        uvm_config_db #(virtual raxi_bfm #(ORAXI_DW))::set(null, "*", "oraxi_bfm", oraxi_bfm);
+        uvm_config_db #(virtual raxi_bfm #(G_IRAXI_DW_COEF))::set(null, "*", "iraxi_bfm_coef", iraxi_bfm_coef);
+        uvm_config_db #(virtual raxi_bfm #(G_IRAXI_DW))::set(null, "*", "iraxi_bfm", iraxi_bfm);
+        uvm_config_db #(virtual raxi_bfm #(G_ORAXI_DW))::set(null, "*", "oraxi_bfm", oraxi_bfm);
         run_test();
     end
 

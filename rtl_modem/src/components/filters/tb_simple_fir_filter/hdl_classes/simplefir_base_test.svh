@@ -5,9 +5,9 @@ class simplefir_base_test #(
       G_NOF_TAPS
     , G_COEF_DW
     , G_SAMPLE_DW
-    , IRAXI_DW_COEF
-    , IRAXI_DW
-    , ORAXI_DW
+    , G_IRAXI_DW_COEF
+    , G_IRAXI_DW
+    , G_ORAXI_DW
 ) extends uvm_test;
 
     `uvm_component_new
@@ -16,9 +16,9 @@ class simplefir_base_test #(
           G_NOF_TAPS
         , G_COEF_DW
         , G_SAMPLE_DW
-        , IRAXI_DW_COEF
-        , IRAXI_DW
-        , ORAXI_DW
+        , G_IRAXI_DW_COEF
+        , G_IRAXI_DW
+        , G_ORAXI_DW
     ), "simplefir_base_test") type_id;
 
     // functions
@@ -28,13 +28,13 @@ class simplefir_base_test #(
 
     // objects
     virtual raxi_bfm #(
-          .DW(IRAXI_DW_COEF)
+          .DW(G_IRAXI_DW_COEF)
     )                                   iraxi_bfm_coef;
     virtual raxi_bfm #(
-          .DW(IRAXI_DW)
+          .DW(G_IRAXI_DW)
     )                                   iraxi_bfm;
     virtual raxi_bfm #(
-          .DW(ORAXI_DW)
+          .DW(G_ORAXI_DW)
     )                                   oraxi_bfm;
 
     // sequencers
@@ -43,37 +43,37 @@ class simplefir_base_test #(
 
     // drivers
     raxi_drvr #(
-          .DW(IRAXI_DW_COEF)
+          .DW(G_IRAXI_DW_COEF)
     )                                   raxi_drvr_coef;
     raxi_drvr #(
-          .DW(IRAXI_DW)
+          .DW(G_IRAXI_DW)
     )                                   raxi_drvr_data;
 
     // monitors
     raxi_mont #(
-          .DW(IRAXI_DW_COEF)
+          .DW(G_IRAXI_DW_COEF)
     )                                   iraxi_mont_coef;
     raxi_mont #(
-          .DW(IRAXI_DW)
+          .DW(G_IRAXI_DW)
     )                                   iraxi_mont_data;
     raxi_mont #(
-          .DW(ORAXI_DW)
+          .DW(G_ORAXI_DW)
     )                                   oraxi_mont_data;
 
     // sequences
     simplefir_seqc_coef #(
-          .NOF_TAPS(G_NOF_TAPS)
+          .G_NOF_TAPS(G_NOF_TAPS)
         , .G_COEF_DW(G_COEF_DW)
     )                                   simplefir_seqc_coef_h;
     simplefir_seqc_data #(
-          .SAMPLE_DW(G_SAMPLE_DW)
+          .G_SAMPLE_DW(G_SAMPLE_DW)
     )                                   simplefir_seqc_data_h;
 
     // scoreboard
     simplefir_scrb #(
-          .NOF_TAPS(G_NOF_TAPS)
-        , .COEF_DW(G_COEF_DW)
-        , .SAMPLE_DW(G_SAMPLE_DW)
+          .G_NOF_TAPS(G_NOF_TAPS)
+        , .G_COEF_DW(G_COEF_DW)
+        , .G_SAMPLE_DW(G_SAMPLE_DW)
     )                                   simplefir_scrb_h;
 endclass
 
@@ -82,11 +82,11 @@ endclass
 //--------------------------------------------------------------------------------------------------------------------------------
 function void simplefir_base_test::build_phase(uvm_phase phase);
     // get bfm from database
-    if (!uvm_config_db #(virtual raxi_bfm #(IRAXI_DW_COEF))::get(this, "", "iraxi_bfm_coef", iraxi_bfm_coef))
+    if (!uvm_config_db #(virtual raxi_bfm #(G_IRAXI_DW_COEF))::get(this, "", "iraxi_bfm_coef", iraxi_bfm_coef))
         `uvm_fatal("BFM", "Failed to get iraxi_bfm_coef");
-    if (!uvm_config_db #(virtual raxi_bfm #(IRAXI_DW))::get(this, "", "iraxi_bfm", iraxi_bfm))
+    if (!uvm_config_db #(virtual raxi_bfm #(G_IRAXI_DW))::get(this, "", "iraxi_bfm", iraxi_bfm))
         `uvm_fatal("BFM", "Failed to get iraxi_bfm");
-    if (!uvm_config_db #(virtual raxi_bfm #(ORAXI_DW))::get(this, "", "oraxi_bfm", oraxi_bfm))
+    if (!uvm_config_db #(virtual raxi_bfm #(G_ORAXI_DW))::get(this, "", "oraxi_bfm", oraxi_bfm))
         `uvm_fatal("BFM", "Failed to get oraxi_bfm");
 
     // build sequencers
@@ -94,13 +94,13 @@ function void simplefir_base_test::build_phase(uvm_phase phase);
     `uvm_component_create(uvm_sequencer #(raxi_seqi), raxi_seqr_data)
 
     // build driver
-    `uvm_component_create(raxi_drvr #(IRAXI_DW_COEF), raxi_drvr_coef)
-    `uvm_component_create(raxi_drvr #(IRAXI_DW), raxi_drvr_data)
+    `uvm_component_create(raxi_drvr #(G_IRAXI_DW_COEF), raxi_drvr_coef)
+    `uvm_component_create(raxi_drvr #(G_IRAXI_DW), raxi_drvr_data)
 
     // build monitor
-    `uvm_component_create(raxi_mont #(IRAXI_DW_COEF), iraxi_mont_coef)
-    `uvm_component_create(raxi_mont #(IRAXI_DW), iraxi_mont_data)
-    `uvm_component_create(raxi_mont #(ORAXI_DW), oraxi_mont_data)
+    `uvm_component_create(raxi_mont #(G_IRAXI_DW_COEF), iraxi_mont_coef)
+    `uvm_component_create(raxi_mont #(G_IRAXI_DW), iraxi_mont_data)
+    `uvm_component_create(raxi_mont #(G_ORAXI_DW), oraxi_mont_data)
 
     // build sequence
     `uvm_component_create(simplefir_seqc_coef #(G_NOF_TAPS, G_COEF_DW), simplefir_seqc_coef_h);
