@@ -10,10 +10,9 @@ class dsp_seqc_sym_framer extends dsp_base_seqc;
     // create symbol array
     int symsz = 1;
     int digit = 0;
-    int sym_ptr = 0;
 
     // settings
-    int tr_frsz = 0;
+    bit bit_order = 0;
 endclass
 
 //--------------------------------------------------------------------------------------------------------------------------------
@@ -35,9 +34,19 @@ task dsp_seqc_sym_framer::body();
         sym_ptr = 0;
         for (int ptr = 0; ptr < this.tr_pldsz; ptr++) begin
             sym_ptr = ptr / symsz;
-            // digit = ptr % symsz; // LSB first
-            digit = (symsz - 1) - ptr % symsz; // MSB first
+            if (bit_order == 0)
+                // MSB first
+                digit = (symsz - 1) - ptr % symsz;
+            else
+                // LSB first
+                digit = ptr % symsz;
             datagen_seqi_o.iq_sym[sym_ptr] += datagen_seqi_o.bitstream[ptr] << digit;
+        end
+
+        datagen_seqi_o.iq_v = new[datagen_seqi_o.iq_sym.size()];
+        for (int ii = 0; ii < datagen_seqi_o.iq_sym.size(); ii++) begin
+            datagen_seqi_o.iq_v[ii] = new[1];
+            datagen_seqi_o.iq_v[ii][0] = 1;
         end
 
         // apply settings to output transcation
