@@ -1,3 +1,6 @@
+//--------------------------------------------------------------------------------------------------------------------------------
+// name : dsp_layr_sym_framer
+//--------------------------------------------------------------------------------------------------------------------------------
 class dsp_layr_sym_framer extends dsp_base_layr;
     `uvm_component_utils(dsp_layr_sym_framer)
     `uvm_component_new
@@ -7,7 +10,7 @@ class dsp_layr_sym_framer extends dsp_base_layr;
     extern task run_phase(uvm_phase phase);
 
     // sequence
-    dsp_seqc_sym_framer             dsp_seqc_sym_framer_h;
+    dsp_seqc_sym_framer                 dsp_seqc_sym_framer_h;
 endclass
 
 //--------------------------------------------------------------------------------------------------------------------------------
