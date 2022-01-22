@@ -52,8 +52,8 @@ function automatic void fir_filter::filt(ref datagen_seqi datagen_seqi_h);
 
         for (int k = 0; k < filter_length; k++) begin
             // filter product
-            i_accum += coefficients[k] * ring_buffer_i[read_pointer];
-            q_accum += coefficients[k] * ring_buffer_q[read_pointer];
+            i_accum += coefficients[k] * $itor(ring_buffer_i[read_pointer]);
+            q_accum += coefficients[k] * $itor(ring_buffer_q[read_pointer]);
 
             // read pointer
             if (read_pointer < 1)
