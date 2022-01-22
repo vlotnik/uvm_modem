@@ -46,8 +46,10 @@ function void sim_simple_fir_filter::add_coefficient(raxi_seqi raxi_seqi_h);
 
     if (raxi_seqi_h.valid == 1) begin
         coefficient = {<<{raxi_seqi_h.data}};
-        coefficients = {$signed(coefficient), coefficients[0:G_NOF_TAPS-1]};
-        $display("COEFS: %p", coefficients);
+
+        coefficients[1:G_NOF_TAPS-1] = coefficients[0:G_NOF_TAPS-2];
+        coefficients[0] = $itor($signed(coefficient));
+
         fir_filter_h.set_coefficients(coefficients);
     end
 endfunction

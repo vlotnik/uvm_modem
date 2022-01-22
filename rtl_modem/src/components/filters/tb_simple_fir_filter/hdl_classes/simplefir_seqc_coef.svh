@@ -29,9 +29,11 @@ task simplefir_seqc_coef::body();
     bit[G_COEF_DW-1:0] coef;
 
     filter_design_h = new();
-    fir_coefficients = filter_design_h.get_coefs_rcos(0.35, 0.1, G_NOF_TAPS);
-    rg_firwr_cv = new[fir_coefficients.size];
-    for (int ii = 0; ii < fir_coefficients.size; ii++)
+    fir_coefficients = new[G_NOF_TAPS];
+    filter_design_h.get_coefs_rcos(0.35, 0.1, G_NOF_TAPS, fir_coefficients);
+
+    rg_firwr_cv = new[G_NOF_TAPS];
+    for (int ii = 0; ii < G_NOF_TAPS; ii++)
         rg_firwr_cv[ii] = $rtoi(fir_coefficients[ii] * $pow(2, G_COEF_DW-1));
 
     start_item(raxi_seqi_h);
@@ -41,7 +43,6 @@ task simplefir_seqc_coef::body();
     for (int ii = 0; ii < rg_firwr_cv.size; ii++) begin
         start_item(raxi_seqi_h);
             coef = rg_firwr_cv[ii];
-            $display("coefficient: %d", $signed(coef));
             raxi_seqi_h.rst = 0;
             raxi_seqi_h.valid = 1;
             raxi_seqi_h.data = {<<{coef}};

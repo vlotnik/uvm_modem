@@ -104,7 +104,7 @@ module tb_simple_fir_filter;
         uvm_config_db #(virtual raxi_bfm #(G_IRAXI_DW_COEF))::set(null, "*", "iraxi_bfm_coef", iraxi_bfm_coef);
         uvm_config_db #(virtual raxi_bfm #(G_IRAXI_DW))::set(null, "*", "iraxi_bfm", iraxi_bfm);
         uvm_config_db #(virtual raxi_bfm #(G_ORAXI_DW))::set(null, "*", "oraxi_bfm", oraxi_bfm);
-        run_test();
+        run_test("simplefir_base_test");
     end
 
 endmodule

@@ -95,5 +95,5 @@ function void simplefir_scrb::processing();
         `uvm_error("FAIL", data_str)
         fail_cnt++;
     end else
-        `uvm_info("PASS", data_str, UVM_HIGH)
+        `uvm_info("PASS", data_str, UVM_NONE)
 endfunction
