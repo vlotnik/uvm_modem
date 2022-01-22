@@ -7,13 +7,13 @@ class filter_design;
     // beta : roll-off factor
     // cutoff : cutoff frequency
     // taps : filter's length
-    extern function t_real_array get_coefs_rcos(real beta, real cutoff, int taps);
+    extern function automatic void get_coefs_rcos(real beta, real cutoff, int taps, ref real coefs[]);
 endclass
 
 //--------------------------------------------------------------------------------------------------------------------------------
 // IMPLEMENTATION
 //--------------------------------------------------------------------------------------------------------------------------------
-function t_real_array filter_design::get_coefs_rcos(real beta, real cutoff, int taps);
+function automatic void filter_design::get_coefs_rcos(real beta, real cutoff, int taps, ref real coefs[]);
     real pi;
     real epsilon;
     real t[];
@@ -49,5 +49,5 @@ function t_real_array filter_design::get_coefs_rcos(real beta, real cutoff, int 
         b[i] = 2 * fc * b[i];
     end
 
-    return b;
+    coefs = b;
 endfunction
