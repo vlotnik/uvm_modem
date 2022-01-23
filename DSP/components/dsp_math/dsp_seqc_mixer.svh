@@ -7,7 +7,7 @@ class dsp_seqc_mixer extends dsp_base_seqc;
 
     extern task body();
 
-    dspmath_mixer                   dspmath_mixer_h;
+    dspmath_mixer                       dspmath_mixer_h;
 endclass
 
 //--------------------------------------------------------------------------------------------------------------------------------
@@ -23,6 +23,8 @@ task dsp_seqc_mixer::body();
         dspmath_mixer_h.mix(datagen_seqi_o);
 
         start_item(datagen_seqi_o);
+            `uvm_info(get_name(), $sformatf("\nmixer, I: %s", datagen_seqi_o.convert2string_mux(4)), UVM_HIGH);
+            `uvm_info(get_name(), $sformatf("\nmixer, Q: %s", datagen_seqi_o.convert2string_mux(5)), UVM_HIGH);
         finish_item(datagen_seqi_o);
         datagen_seqr_h.item_done();
     end
