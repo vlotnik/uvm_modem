@@ -53,6 +53,7 @@ task dsp_seqc_sym_framer::body();
         datagen_seqi_o.tr_frsz = this.tr_frsz;
 
         start_item(datagen_seqi_o);
+            `uvm_info(get_name(), $sformatf("\nsym_framer, sym: %s", datagen_seqi_o.convert2string_mux(1)), UVM_HIGH);
         finish_item(datagen_seqi_o);
         datagen_seqr_h.item_done();
     end
