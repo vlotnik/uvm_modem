@@ -24,18 +24,11 @@ task if_ddc_drvr::run_phase(uvm_phase phase);
 
     forever begin
         seq_item_port.get_next_item(datagen_seqi_h);
-            $display("modulation: %s", pkg_modem::get_modulation_settings(datagen_seqi_h.tr_mod).name);
-            $display("bitstream: %p", datagen_seqi_h.bitstream);
-            $display("symbols: %p", datagen_seqi_h.iq_sym);
-            $display("IQ I: %p", datagen_seqi_h.iq_i);
-            $display("IQ Q: %p", datagen_seqi_h.iq_q);
-            $display("\n");
-
             foreach(datagen_seqi_h.iq_i[i]) begin
                 @(posedge if_ddc_bfm_h.clk);
 
-                if_ddc_bfm_h.iq_i[0] <= $rtoi($floor(datagen_seqi_h.iq_i[i] * 512 + 0.5));
-                if_ddc_bfm_h.iq_q[0] <= $rtoi($floor(datagen_seqi_h.iq_q[i] * 512 + 0.5));
+                if_ddc_bfm_h.iq_i[0] <= datagen_seqi_h.iq_i[i];
+                if_ddc_bfm_h.iq_q[0] <= datagen_seqi_h.iq_q[i];
             end
         seq_item_port.item_done();
     end
