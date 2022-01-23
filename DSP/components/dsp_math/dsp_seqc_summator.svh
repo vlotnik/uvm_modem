@@ -10,22 +10,17 @@ class dsp_seqc_summator #(
     // settings
     bit[NOFCH-1:0] no_more_data;
     int size_of_nar = 0;
-    int ptr_ch = 0;
     int ptr_d[NOFCH];
-    int ptr_v[NOFCH];
     int seqi_sz[NOFCH];
     int tr_ptr;
-
-    int fid;
-    real tr_gain = 1.0;
 
     // distortion
     real dist_i = 0.0;
     real dist_q = 0.0;
     real amp = 0.0;
     real ort = 0.0;
-    int zsc_i = 0.0;
-    int zsc_q = 0.0;
+    int zsc_i = 0;
+    int zsc_q = 0;
 
     // functions
     extern function void parse_item();
@@ -33,9 +28,9 @@ class dsp_seqc_summator #(
     extern task body();
 
     // objects
-    datagen_seqr                    datagen_seqr_h[NOFCH];
-    datagen_seqi                    datagen_seqi_i[NOFCH];
-    datagen_seqi                    datagen_seqi_o;
+    datagen_seqr                        datagen_seqr_h[NOFCH];
+    datagen_seqi                        datagen_seqi_i[NOFCH];
+    datagen_seqi                        datagen_seqi_o;
 endclass
 
 //--------------------------------------------------------------------------------------------------------------------------------
@@ -54,15 +49,15 @@ function void dsp_seqc_summator::parse_item();
         ptr_d[ch]++;
     end
 
-    dist_i = datagen_seqi_o.iq_i[0] / NOFCH;
-    dist_q = datagen_seqi_o.iq_q[0] / NOFCH;
+    dist_i = $itor(datagen_seqi_o.iq_i[0]);
+    dist_q = $itor(datagen_seqi_o.iq_q[0]);
 
     // add amplitude imbalance
     dist_i = dist_i * (1.0 + amp);
     // add non orthogonality
     dist_i = dist_i + (dist_q * $sin(ort));
 
-    datagen_seqi_o.iq_i[0] = dist_i;
+    datagen_seqi_o.iq_i[0] = $rtoi(dist_i);
 
     // add zero shift
     datagen_seqi_o.iq_i[0] += zsc_i;
@@ -73,12 +68,10 @@ task dsp_seqc_summator::pre_body();
     for (int ii = 0; ii < NOFCH; ii++) begin
         no_more_data[ii] = 0;
         ptr_d[ii] = 0;
-        ptr_v[ii] = 0;
         seqi_sz[ii] = 0;
-        tr_ptr = 0;
     end
 
-    datagen_seqi_o = datagen_seqi::type_id::create("datagen_seqi_o");
+    `uvm_object_create(datagen_seqi, datagen_seqi_o)
 endtask
 
 task dsp_seqc_summator::body();
@@ -96,6 +89,8 @@ task dsp_seqc_summator::body();
         parse_item();
 
         start_item(datagen_seqi_o);
+            `uvm_info(get_name(), $sformatf("\nsummator, I: %s", datagen_seqi_o.convert2string_mux(4)), UVM_HIGH);
+            `uvm_info(get_name(), $sformatf("\nsummator, Q: %s", datagen_seqi_o.convert2string_mux(5)), UVM_HIGH);
         finish_item(datagen_seqi_o);
 
         for (int ch = 0; ch < NOFCH; ch++) begin
