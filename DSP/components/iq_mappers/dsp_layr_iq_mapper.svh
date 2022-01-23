@@ -10,7 +10,7 @@ class dsp_layr_iq_mapper extends dsp_base_layr;
     extern task run_phase(uvm_phase phase);
 
     // sequence
-    dsp_seqc_iq_mapper              dsp_seqc_iq_mapper_h;
+    dsp_seqc_iq_mapper                  dsp_seqc_iq_mapper_h;
 endclass
 
 //--------------------------------------------------------------------------------------------------------------------------------
