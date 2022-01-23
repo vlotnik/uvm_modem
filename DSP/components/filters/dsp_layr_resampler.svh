@@ -1,3 +1,6 @@
+//--------------------------------------------------------------------------------------------------------------------------------
+// name : dsp_layr_resampler
+//--------------------------------------------------------------------------------------------------------------------------------
 class dsp_layr_resampler extends dsp_base_layr;
     `uvm_component_utils(dsp_layr_resampler)
     `uvm_component_new
@@ -7,7 +10,7 @@ class dsp_layr_resampler extends dsp_base_layr;
     extern task run_phase(uvm_phase phase);
 
     // sequence
-    dsp_seqc_resampler              dsp_seqc_resampler_h;
+    dsp_seqc_resampler                  dsp_seqc_resampler_h;
 endclass
 
 //--------------------------------------------------------------------------------------------------------------------------------
