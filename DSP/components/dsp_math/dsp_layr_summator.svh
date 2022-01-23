@@ -8,26 +8,25 @@ class dsp_layr_summator #(
     `uvm_component_new
 
     // settings
-    real                            tr_gain = 1.0;
-    real                            amp = 0.0;
-    real                            ort = 0.0;
-    int                             zsc_i = 0;
-    int                             zsc_q = 0;
+    real amp = 0.0;
+    real ort = 0.0;
+    int zsc_i = 0;
+    int zsc_q = 0;
 
     extern function void build_phase(uvm_phase phase);
     extern function void connect_phase(uvm_phase phase);
     extern task run_phase(uvm_phase phase);
 
     // input sequencer
-    datagen_seqr                    datagen_seqr_i[NOFCH];
+    datagen_seqr                        datagen_seqr_i[NOFCH];
 
     // multichannel sequence handler
     dsp_seqc_summator #(
         NOFCH
-    )                               dsp_seqc_summator_h;
+    )                                   dsp_seqc_summator_h;
 
     // output sequencer
-    datagen_seqr                    datagen_seqr_o;
+    datagen_seqr                        datagen_seqr_o;
 endclass
 
 //--------------------------------------------------------------------------------------------------------------------------------
@@ -38,7 +37,6 @@ function void dsp_layr_summator::build_phase(uvm_phase phase);
         `uvm_component_create(uvm_sequencer #(datagen_seqi), datagen_seqr_i[ii], ii)
 
     `uvm_component_create(dsp_seqc_summator #(NOFCH), dsp_seqc_summator_h)
-    dsp_seqc_summator_h.tr_gain = this.tr_gain;
     dsp_seqc_summator_h.amp = this.amp;
     dsp_seqc_summator_h.ort = this.ort;
     dsp_seqc_summator_h.zsc_i = this.zsc_i;
