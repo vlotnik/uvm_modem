@@ -42,7 +42,8 @@ task dsp_seqc_resampler::body();
         fir_resampler_h.resample(datagen_seqi_o);
 
         start_item(datagen_seqi_o);
-            `uvm_info(get_name(), $sformatf("\npong sequence with %s", datagen_seqi_o.convert2string()), UVM_HIGH);
+            `uvm_info(get_name(), $sformatf("\nresampler, I: %s", datagen_seqi_o.convert2string_mux(4)), UVM_HIGH);
+            `uvm_info(get_name(), $sformatf("\nresampler, Q: %s", datagen_seqi_o.convert2string_mux(5)), UVM_HIGH);
         finish_item(datagen_seqi_o);
         datagen_seqr_h.item_done();
     end
