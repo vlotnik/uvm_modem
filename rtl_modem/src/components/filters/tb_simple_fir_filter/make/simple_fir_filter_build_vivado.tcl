@@ -1,6 +1,10 @@
-# Vivado 2021.2
+#---------------------------------------------------------------------------------------------------------------------------------
+# name : simple_fir_filter
+#---------------------------------------------------------------------------------------------------------------------------------
 
-set project_name "tb_simple_fir_filter"
+# Vivado 2020.2
+
+set project_name "vivado_tb_simple_fir_filter"
 
 # close project if it's allready created
 set project_found [llength [get_projects $project_name] ]
@@ -13,8 +17,9 @@ cd [file dirname [info script]]
 # create project
 create_project $project_name "$project_name" -force
 
-set RTL_path "../../../../../../../rtl_modem"
-set UVM_path "../../../../../../../uvm_modem"
+set SRC_path "../../../../../../.."
+set RTL_path "$SRC_path/rtl_modem"
+set UVM_path "$SRC_path/uvm_modem"
 
 # add sources
 add_files -norecurse $RTL_path/src/components/filters/simple_fir_filter.vhdl
