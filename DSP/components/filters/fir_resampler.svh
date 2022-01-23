@@ -64,10 +64,12 @@ function int fir_resampler::add_ratio();
         if (ratio_accumulator > (0.5 - eps)) begin
             ratio_accumulator = ratio_accumulator - 1.0;
             return 1; // next sample
-        end
-        else begin
+        end else begin
             return 0;
         end
+    end else begin
+        ratio_accumulator = ratio_accumulator - 1.0;
+        return 1; // next sample
     end
 endfunction
 
