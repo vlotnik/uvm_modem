@@ -10,7 +10,7 @@ class dsp_layr_mixer extends dsp_base_layr;
     extern task run_phase(uvm_phase phase);
 
     // sequence
-    dsp_seqc_mixer                  dsp_seqc_mixer_h;
+    dsp_seqc_mixer                      dsp_seqc_mixer_h;
 endclass
 
 //--------------------------------------------------------------------------------------------------------------------------------
