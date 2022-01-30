@@ -1,7 +1,7 @@
 ## | base
 
 BASE_RUN_SIM_CMD = \
-	-g GPDW=${CONFIG_GPDW} \
+	-g GP_W=${CONFIG_GP_W} \
 	-g A_W=${CONFIG_A_W} \
 	-g B_W=${CONFIG_B_W} \
 	-g TYPE=${CONFIG_TYPE} \

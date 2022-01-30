@@ -12,6 +12,7 @@ start_time = time.time()
 #---------------------------------------------------------------------------------------------------------------------------------
 # result message
 #---------------------------------------------------------------------------------------------------------------------------------
+total_result = "PASS"
 tb_top_name = "tb_complex_multiplier_fg"
 all_results = make_som(tb_top_name)
 
@@ -24,7 +25,7 @@ tests = [
 number_of_tests = 10
 
 config = {
-      "gpdw" : 10
+      "gp_w" : 10
     , "a_w" : 25
     , "b_w" : 18
     , "type" : 0
@@ -45,7 +46,7 @@ for j in tests:
         test_name = j
         uvm_name = test_name + "_uvm"
 
-        config["gpdw"] = random.randint(8, 16)
+        config["gp_w"] = random.randint(8, 16)
         config["a_w"] = random.randint(8, 16)
         config["b_w"] = random.randint(8, 16)
         config["type"] = random.randint(0, 1)
@@ -56,6 +57,8 @@ for j in tests:
         call_uvm_test(uvm_name, config)
 
         current_result = get_current_result()
+        if (current_result == "FAIL"):
+            total_result = current_result
         copy_log_file(i, config["sv_seed"], current_result, test_name)
         current_result_str = get_current_result_str(current_result, test_name, config)
 
@@ -73,4 +76,4 @@ all_results += result_time
 # print result message
 #---------------------------------------------------------------------------------------------------------------------------------
 print(all_results)
-make_result_file()
+make_result_file(total_result)

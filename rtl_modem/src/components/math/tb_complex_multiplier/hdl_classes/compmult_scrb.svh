@@ -5,40 +5,40 @@
 `uvm_analysis_imp_decl(_o)
 
 class compmult_scrb #(
-      GPDW
+      GP_W
     , A_W
     , B_W
     , PIPE_CE
     , CONJ_MULT
 ) extends raxi_scrb;
-    `uvm_component_param_utils(compmult_scrb #(GPDW, A_W, B_W, PIPE_CE, CONJ_MULT))
+    `uvm_component_param_utils(compmult_scrb #(GP_W, A_W, B_W, PIPE_CE, CONJ_MULT))
     `uvm_component_new
 
     // base UVM functions
     extern function void build_phase(uvm_phase phase);
 
-    uvm_analysis_imp_i #(raxi_seqi, compmult_scrb #(GPDW, A_W, B_W, PIPE_CE, CONJ_MULT)) raxi_aprt_i;
-    uvm_analysis_imp_o #(raxi_seqi, compmult_scrb #(GPDW, A_W, B_W, PIPE_CE, CONJ_MULT)) raxi_aprt_o;
+    uvm_analysis_imp_i #(raxi_seqi, compmult_scrb #(GP_W, A_W, B_W, PIPE_CE, CONJ_MULT)) raxi_aprt_i;
+    uvm_analysis_imp_o #(raxi_seqi, compmult_scrb #(GP_W, A_W, B_W, PIPE_CE, CONJ_MULT)) raxi_aprt_o;
 
     // sim model
     sim_complex_multiplier #(
-          .GPDW(GPDW)
+          .GP_W(GP_W)
         , .A_W(A_W)
         , .B_W(B_W)
         , .PIPE_CE(PIPE_CE)
         , .CONJ_MULT(CONJ_MULT)
-    )                               sim_complex_multiplier_h;
+    )                                   sim_complex_multiplier_h;
 
     compmult_seqi #(
-          .GPDW(GPDW)
+          .GP_W(GP_W)
         , .A_W(A_W)
         , .B_W(B_W)
-    )                               compmult_seqi_i;
+    )                                   compmult_seqi_i;
     compmult_seqi #(
-          .GPDW(GPDW)
+          .GP_W(GP_W)
         , .A_W(A_W)
         , .B_W(B_W)
-    )                               compmult_seqi_o;
+    )                                   compmult_seqi_o;
 
     // functions
     extern virtual function void write_i(raxi_seqi raxi_seqi_h);
@@ -53,10 +53,10 @@ function void compmult_scrb::build_phase(uvm_phase phase);
     raxi_aprt_i = new("raxi_aprt_i", this);
     raxi_aprt_o = new("raxi_aprt_o", this);
 
-    `uvm_object_create(compmult_seqi #(GPDW, A_W, B_W), compmult_seqi_i)
-    `uvm_object_create(compmult_seqi #(GPDW, A_W, B_W), compmult_seqi_o)
+    `uvm_object_create(compmult_seqi #(GP_W, A_W, B_W), compmult_seqi_i)
+    `uvm_object_create(compmult_seqi #(GP_W, A_W, B_W), compmult_seqi_o)
 
-    `uvm_object_create(sim_complex_multiplier #(GPDW, A_W, B_W, PIPE_CE, CONJ_MULT), sim_complex_multiplier_h);
+    `uvm_object_create(sim_complex_multiplier #(GP_W, A_W, B_W, PIPE_CE, CONJ_MULT), sim_complex_multiplier_h);
 endfunction
 
 function void compmult_scrb::write_i(raxi_seqi raxi_seqi_h);

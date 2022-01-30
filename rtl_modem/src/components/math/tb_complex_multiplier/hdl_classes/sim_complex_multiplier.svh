@@ -2,22 +2,22 @@
 // name : sim_complex_multiplier
 //--------------------------------------------------------------------------------------------------------------------------------
 class sim_complex_multiplier #(
-      GPDW
+      GP_W
     , A_W
     , B_W
     , PIPE_CE
     , CONJ_MULT
 ) extends uvm_object;
-    `uvm_object_param_utils(sim_complex_multiplier #(GPDW, A_W, B_W, PIPE_CE, CONJ_MULT))
+    `uvm_object_param_utils(sim_complex_multiplier #(GP_W, A_W, B_W, PIPE_CE, CONJ_MULT))
 
-    localparam                      LATENCY = 4;
-    localparam                      A_MAX = 2**A_W-1;
-    localparam                      B_MAX = 2**B_W-1;
-    localparam                      C_W = A_W + B_W + 1;
-    localparam                      PIPE_WIDTH = GPDW + C_W * 2;
+    localparam                          LATENCY = 4;
+    localparam                          A_MAX = 2**A_W-1;
+    localparam                          B_MAX = 2**B_W-1;
+    localparam                          C_W = A_W + B_W + 1;
+    localparam                          PIPE_WIDTH = GP_W + C_W * 2;
 
-    localparam                      RAXI_DWI = GPDW + A_W*2 + B_W*2;
-    localparam                      RAXI_DWO = GPDW + C_W*2;
+    localparam                          RAXI_DWI = GP_W + A_W*2 + B_W*2;
+    localparam                          RAXI_DWO = GP_W + C_W*2;
 
     // variables
     int a_re;
@@ -32,8 +32,8 @@ class sim_complex_multiplier #(
           .DW(PIPE_WIDTH)
         , .SIZE(LATENCY)
         , .PIPE_CE(PIPE_CE)
-    )                               sim_pipe_h;
-    raxi_seqi                       raxi_seqi_h_pipe;
+    )                                   sim_pipe_h;
+    raxi_seqi                           raxi_seqi_h_pipe;
 
     extern function new(string name = "");
     extern function automatic void simulate(raxi_seqi raxi_seqi_i, ref raxi_seqi raxi_seqi_o);
@@ -52,11 +52,11 @@ function automatic void sim_complex_multiplier::simulate(raxi_seqi raxi_seqi_i, 
     bit[A_W-1:0] raxi_data_a_im;
     bit[B_W-1:0] raxi_data_b_re;
     bit[B_W-1:0] raxi_data_b_im;
-    bit[GPDW-1:0] raxi_data_igp;
+    bit[GP_W-1:0] raxi_data_igp;
     bit[RAXI_DWI-1:0] raxi_data_i;
     bit[C_W-1:0] raxi_data_c_re;
     bit[C_W-1:0] raxi_data_c_im;
-    bit[GPDW-1:0] raxi_data_pipe_gp;
+    bit[GP_W-1:0] raxi_data_pipe_gp;
     bit[RAXI_DWO-1:0] raxi_data_pipe;
 
     // parse input transaction

@@ -2,10 +2,10 @@
 // name : compmult_agnt
 //--------------------------------------------------------------------------------------------------------------------------------
 class compmult_agnt #(
-      RAXI_DWI = 10
-    , RAXI_DWO = 12
-) extends raxi_agnt #(RAXI_DWI, RAXI_DWO);
-    `uvm_component_param_utils(compmult_agnt #(RAXI_DWI, RAXI_DWO))
+      IRAXI_DW = 10
+    , ORAXI_DW = 12
+) extends raxi_agnt #(IRAXI_DW, ORAXI_DW);
+    `uvm_component_param_utils(compmult_agnt #(IRAXI_DW, ORAXI_DW))
     `uvm_component_new
 
     // functions
@@ -14,9 +14,9 @@ class compmult_agnt #(
 
     // objects
     compmult_agnt_cfg #(
-          .RAXI_DWI(RAXI_DWI)
-        , .RAXI_DWO(RAXI_DWO)
-    )                               compmult_agnt_cfg_h;
+          .IRAXI_DW(IRAXI_DW)
+        , .ORAXI_DW(ORAXI_DW)
+    )                                   compmult_agnt_cfg_h;
 endclass
 
 //--------------------------------------------------------------------------------------------------------------------------------
@@ -27,8 +27,8 @@ function void compmult_agnt::build_phase(uvm_phase phase);
 
     // get configuration from database
     if (!uvm_config_db #(compmult_agnt_cfg #(
-          RAXI_DWI
-        , RAXI_DWO
+          IRAXI_DW
+        , ORAXI_DW
     ))::get(this, "", "compmult_agnt_cfg_h", compmult_agnt_cfg_h))
         `uvm_fatal(get_name(), "Failed to get compmult agnt configuration");
 endfunction

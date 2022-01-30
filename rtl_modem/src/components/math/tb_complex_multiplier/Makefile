@@ -6,7 +6,7 @@ include make/complex_multiplier_fg_build.mk
 include ${INCLUDE}/test_base_cmds.mk
 include make/complex_multiplier_fg_run_base.mk
 
-	CONFIG_GPDW = 10
+	CONFIG_GP_W = 10
 	CONFIG_A_W = 9
 	CONFIG_B_W = 15
 	CONFIG_TYPE = 1

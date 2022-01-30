@@ -6,7 +6,7 @@ package pkg_compmult;
     `include "uvm_macros.svh"
     `include "common_macros.svh"
 
-    import pkg_sv_demodulators_types::*;
+    import pkg_modem::*;
 
     import pkg_raxi::*;
     import pkg_pipe::*;

@@ -2,23 +2,23 @@
 // name : compmult_base_test
 //--------------------------------------------------------------------------------------------------------------------------------
 class compmult_base_test #(
-      GPDW
+      GP_W
     , A_W
     , B_W
     , CONJ_MULT
     , PIPE_CE
-    , RAXI_DWI
-    , RAXI_DWO
-) extends raxi_base_test #(RAXI_DWI, RAXI_DWO);
+    , IRAXI_DW
+    , ORAXI_DW
+) extends raxi_base_test #(IRAXI_DW, ORAXI_DW);
 
     typedef uvm_component_registry #(compmult_base_test #(
-          GPDW
+          GP_W
         , A_W
         , B_W
         , CONJ_MULT
         , PIPE_CE
-        , RAXI_DWI
-        , RAXI_DWO
+        , IRAXI_DW
+        , ORAXI_DW
     ), "compmult_base_test") type_id;
 
     `uvm_component_new
@@ -29,27 +29,27 @@ class compmult_base_test #(
     extern task run_phase(uvm_phase phase);
 
     compmult_envr_cfg #(
-          .RAXI_DWI(RAXI_DWI)
-        , .RAXI_DWO(RAXI_DWO)
-    )                               compmult_envr_cfg_h;
+          .IRAXI_DW(IRAXI_DW)
+        , .ORAXI_DW(ORAXI_DW)
+    )                                   compmult_envr_cfg_h;
     compmult_envr #(
-          .RAXI_DWI(RAXI_DWI)
-        , .RAXI_DWO(RAXI_DWO)
-    )                               compmult_envr_h;
+          .IRAXI_DW(IRAXI_DW)
+        , .ORAXI_DW(ORAXI_DW)
+    )                                   compmult_envr_h;
 
     compmult_base_seqc #(
-          .GPDW(GPDW)
+          .GP_W(GP_W)
         , .A_W(A_W)
         , .B_W(B_W)
-    )                               compmult_base_seqc_h;
+    )                                   compmult_base_seqc_h;
 
     compmult_scrb #(
-          .GPDW(GPDW)
+          .GP_W(GP_W)
         , .A_W(A_W)
         , .B_W(B_W)
         , .PIPE_CE(PIPE_CE)
         , .CONJ_MULT(CONJ_MULT)
-    )                               compmult_scrb_h;
+    )                                   compmult_scrb_h;
 endclass
 
 //--------------------------------------------------------------------------------------------------------------------------------
@@ -59,23 +59,23 @@ function void compmult_base_test::build_phase(uvm_phase phase);
     super.build_phase(phase);
 
     // build environment configuration
-    `uvm_object_create(compmult_envr_cfg #(RAXI_DWI, RAXI_DWO), compmult_envr_cfg_h)
+    `uvm_object_create(compmult_envr_cfg #(IRAXI_DW, ORAXI_DW), compmult_envr_cfg_h)
     compmult_envr_cfg_h.raxi_bfm_i = this.raxi_bfm_i;
     compmult_envr_cfg_h.raxi_bfm_o = this.raxi_bfm_o;
     // set environment configuration to database
     uvm_config_db #(compmult_envr_cfg #(
-          RAXI_DWI
-        , RAXI_DWO
+          IRAXI_DW
+        , ORAXI_DW
     ))::set(this, "compmult_envr*", "compmult_envr_cfg_h", compmult_envr_cfg_h);
 
     // build environment
-    `uvm_component_create(compmult_envr #(RAXI_DWI, RAXI_DWO), compmult_envr_h)
+    `uvm_component_create(compmult_envr #(IRAXI_DW, ORAXI_DW), compmult_envr_h)
 
     // build sequence
-    `uvm_component_create(compmult_base_seqc #(GPDW, A_W, B_W), compmult_base_seqc_h)
+    `uvm_component_create(compmult_base_seqc #(GP_W, A_W, B_W), compmult_base_seqc_h)
 
     // build scoreboard
-    `uvm_component_create(compmult_scrb #(GPDW, A_W, B_W, PIPE_CE, CONJ_MULT), compmult_scrb_h)
+    `uvm_component_create(compmult_scrb #(GP_W, A_W, B_W, PIPE_CE, CONJ_MULT), compmult_scrb_h)
 endfunction
 
 function void compmult_base_test::connect_phase(uvm_phase phase);

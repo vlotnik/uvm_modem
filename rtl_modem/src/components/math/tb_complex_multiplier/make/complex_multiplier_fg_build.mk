@@ -22,7 +22,6 @@ DEF_LIB = ${LIB_PATH}/work
     comp_vhd: ##                        compile RTL sources
 	vcom -64 -2008 -work rtl_modem -mixedsvvh l ${DIR}/src/pkg_rtl_modem_types.vhdl
 	vcom -64 -2008 -work rtl_modem ${DIR}/src/components/math/complex_multiplier.vhdl
-	vcom -64 -2008 -work rtl_modem ${DIR}/src/components/math/complex_multiplier_wrap.vhdl
 
     ## build:                           build RTL
     build: \
@@ -41,6 +40,6 @@ DEF_LIB = ${LIB_PATH}/work
 	-work ${DEF_LIB} ${UVM_PATH}/system/raxi/raxi_bfm.sv \
 	-work ${DEF_LIB} ${UVM_PATH}/system/raxi/pkg_raxi.sv \
 	-work ${DEF_LIB} ${UVM_PATH}/system/pipe/pkg_pipe.sv \
-	-work ${DEF_LIB} ${UVM_PATH}/DSP/libraries/pkg_sv_demodulators_types.sv \
+	-work ${DEF_LIB} ${UVM_PATH}/DSP/libraries/pkg_modem.sv \
 	-work ${DEF_LIB} hdl_classes/pkg_compmult.sv \
 	-work ${DEF_LIB} tb_complex_multiplier.sv
