@@ -14,16 +14,16 @@ module tb_complex_multiplier;
     import pkg_compmult::*;
 
     // main settings
-    parameter                           GP_W = 10;
-    parameter                           A_W = 12;
-    parameter                           B_W = 12;
+    parameter                           GP_DW = 10;
+    parameter                           A_DW = 12;
+    parameter                           B_DW = 12;
     parameter                           TYPE = 0;
     parameter                           CONJ_MULT = 0;
     parameter                           PIPE_CE = 0;
 
-    localparam                          C_DW = A_W + B_W + 1;
-    localparam                          IRAXI_DW = GP_W + A_W*2 + B_W*2;
-    localparam                          ORAXI_DW = GP_W + C_DW*2;
+    localparam                          C_DW = A_DW + B_DW + 1;
+    localparam                          IRAXI_DW = GP_DW + A_DW*2 + B_DW*2;
+    localparam                          ORAXI_DW = GP_DW + C_DW*2;
 
 //--------------------------------------------------------------------------------------------------------------------------------
 // clock generator
@@ -51,9 +51,9 @@ module tb_complex_multiplier;
     bit[ORAXI_DW-1:0]                   odut_data;
 //--------------------------------------------------------------------------------------------------------------------------------
     complex_multiplier #(
-          .g_gp_w                       (GP_W)
-        , .g_a_w                        (A_W)
-        , .g_b_w                        (B_W)
+          .g_gp_dw                      (GP_DW)
+        , .g_a_dw                       (A_DW)
+        , .g_b_dw                       (B_DW)
         , .g_type                       (TYPE)
         , .g_conj_mult                  (CONJ_MULT)
         , .g_pipe_ce                    (PIPE_CE)
@@ -61,11 +61,11 @@ module tb_complex_multiplier;
         , .g_oraxi_dw                   (ORAXI_DW)
     )
     dut (
-          .iclk                         (idut_clk)
-        , .ivalid                       (idut_valid)
-        , .idata                        (idut_data)
-        , .ovalid                       (odut_valid)
-        , .odata                        (odut_data)
+          .iCLK                         (idut_clk)
+        , .iVALID                       (idut_valid)
+        , .iDATA                        (idut_data)
+        , .oVALID                       (odut_valid)
+        , .oDATA                        (odut_data)
     );
 
     assign idut_clk                     = clk;
@@ -81,9 +81,9 @@ module tb_complex_multiplier;
 // UVM test
 //--------------------------------------------------------------------------------------------------------------------------------
     typedef compmult_base_test #(
-          .GP_W(GP_W)
-        , .A_W(A_W)
-        , .B_W(B_W)
+          .GP_DW(GP_DW)
+        , .A_DW(A_DW)
+        , .B_DW(B_DW)
         , .CONJ_MULT(CONJ_MULT)
         , .PIPE_CE(PIPE_CE)
         , .IRAXI_DW(IRAXI_DW)

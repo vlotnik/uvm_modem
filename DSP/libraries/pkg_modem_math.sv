@@ -2,6 +2,9 @@
 // name : pkg_modem_math
 //--------------------------------------------------------------------------------------------------------------------------------
 package pkg_modem_math;
+
+    import pkg_modem::*;
+
     real c_pi = 3.1415926535897932384626433832795;
 
     function real f_abs_real(real x);
@@ -40,5 +43,19 @@ package pkg_modem_math;
         cos_int = $rtoi(cos_floor);
 
         return cos_int;
+    endfunction
+
+    function t_iq f_complex_mult(t_iq a, t_iq b, bit conj_mult);
+        t_iq c;
+
+        if (conj_mult == 0) begin
+            c.i = a.i * b.i - a.q * b.q;
+            c.q = a.q * b.i + a.i * b.q;
+        end else begin
+            c.i = a.i * b.i + a.q * b.q;
+            c.q = a.q * b.i - a.i * b.q;
+        end
+
+        return c;
     endfunction
 endpackage

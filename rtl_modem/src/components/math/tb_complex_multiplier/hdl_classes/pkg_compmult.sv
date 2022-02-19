@@ -6,6 +6,7 @@ package pkg_compmult;
     `include "uvm_macros.svh"
     `include "common_macros.svh"
 
+    import pkg_modem_math::*;
     import pkg_modem::*;
 
     import pkg_raxi::*;

@@ -1,9 +1,9 @@
 ## | base
 
 BASE_RUN_SIM_CMD = \
-	-g GP_W=${CONFIG_GP_W} \
-	-g A_W=${CONFIG_A_W} \
-	-g B_W=${CONFIG_B_W} \
+	-g GP_DW=${CONFIG_GP_DW} \
+	-g A_DW=${CONFIG_A_DW} \
+	-g B_DW=${CONFIG_B_DW} \
 	-g TYPE=${CONFIG_TYPE} \
 	-g PIPE_CE=${CONFIG_PIPE_CE} \
 	-g CONJ_MULT=${CONFIG_CONJ_MULT} \

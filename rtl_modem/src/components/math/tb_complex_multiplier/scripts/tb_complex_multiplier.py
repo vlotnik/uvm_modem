@@ -13,7 +13,7 @@ start_time = time.time()
 # result message
 #---------------------------------------------------------------------------------------------------------------------------------
 total_result = "PASS"
-tb_top_name = "tb_complex_multiplier_fg"
+tb_top_name = "tb_complex_multiplier"
 all_results = make_som(tb_top_name)
 
 #---------------------------------------------------------------------------------------------------------------------------------
@@ -25,9 +25,9 @@ tests = [
 number_of_tests = 10
 
 config = {
-      "gp_w" : 10
-    , "a_w" : 25
-    , "b_w" : 18
+      "gp_dw" : 10
+    , "a_dw" : 25
+    , "b_dw" : 18
     , "type" : 0
     , "pipe_ce" : 0
     , "conj_mult" : 0
@@ -46,9 +46,9 @@ for j in tests:
         test_name = j
         uvm_name = test_name + "_uvm"
 
-        config["gp_w"] = random.randint(8, 16)
-        config["a_w"] = random.randint(8, 16)
-        config["b_w"] = random.randint(8, 16)
+        config["gp_dw"] = random.randint(8, 16)
+        config["a_dw"] = random.randint(8, 16)
+        config["b_dw"] = random.randint(8, 16)
         config["type"] = random.randint(0, 1)
         config["pipe_ce"] = random.randint(0, 1)
         config["conj_mult"] = random.randint(0, 1)

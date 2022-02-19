@@ -2,11 +2,11 @@
 // name : compmult_seqi
 //--------------------------------------------------------------------------------------------------------------------------------
 class compmult_seqi #(
-      GP_W = 10
-    , A_W = 12
-    , B_W = 12
+      GP_DW = 10
+    , A_DW = 12
+    , B_DW = 12
 ) extends raxi_seqi;
-    `uvm_object_param_utils(compmult_seqi #(GP_W, A_W, B_W))
+    `uvm_object_param_utils(compmult_seqi #(GP_DW, A_DW, B_DW))
     `uvm_object_new
 
     extern function void post_randomize();
@@ -20,14 +20,14 @@ class compmult_seqi #(
     extern function string i2string();
     extern function string o2string();
 
-    localparam RAXI_DATA_WIDTH_I = GP_W + A_W*2 + B_W*2;
-    localparam C_W = A_W + B_W + 1;
-    localparam RAXI_DATA_WIDTH_O = GP_W + C_W*2;
-    localparam GP_MAX = 2**(GP_W) - 1;
-    localparam A_ABS_MIN = 2**(A_W - 1);
-    localparam A_ABS_MAX = 2**(A_W) - 1;
-    localparam B_ABS_MIN = 2**(B_W - 1);
-    localparam B_ABS_MAX = 2**(B_W) - 1;
+    localparam RAXI_DATA_DWIDTH_I = GP_DW + A_DW*2 + B_DW*2;
+    localparam C_W = A_DW + B_DW + 1;
+    localparam RAXI_DATA_DWIDTH_O = GP_DW + C_W*2;
+    localparam GP_MAX = 2**(GP_DW) - 1;
+    localparam A_ABS_MIN = 2**(A_DW - 1);
+    localparam A_ABS_MAX = 2**(A_DW) - 1;
+    localparam B_ABS_MIN = 2**(B_DW - 1);
+    localparam B_ABS_MAX = 2**(B_DW) - 1;
 
     int iiq_v;
     int igp;
@@ -37,16 +37,16 @@ class compmult_seqi #(
     int oiq_v;
     t_iq oiq;
 
-    bit[A_W-1:0]                        raxi_data_iiqa_i;
-    bit[A_W-1:0]                        raxi_data_iiqa_q;
-    bit[B_W-1:0]                        raxi_data_iiqb_i;
-    bit[B_W-1:0]                        raxi_data_iiqb_q;
-    bit[GP_W-1:0]                       raxi_data_igp;
-    bit[RAXI_DATA_WIDTH_I-1:0]          raxi_data_i;
+    bit[A_DW-1:0]                       raxi_data_iiqa_i;
+    bit[A_DW-1:0]                       raxi_data_iiqa_q;
+    bit[B_DW-1:0]                       raxi_data_iiqb_i;
+    bit[B_DW-1:0]                       raxi_data_iiqb_q;
+    bit[GP_DW-1:0]                      raxi_data_igp;
+    bit[RAXI_DATA_DWIDTH_I-1:0]         raxi_data_i;
     bit[C_W-1:0]                        raxi_data_oiq_i;
     bit[C_W-1:0]                        raxi_data_oiq_q;
-    bit[GP_W-1:0]                       raxi_data_ogp;
-    bit[RAXI_DATA_WIDTH_O-1:0]          raxi_data_o;
+    bit[GP_DW-1:0]                      raxi_data_ogp;
+    bit[RAXI_DATA_DWIDTH_O-1:0]         raxi_data_o;
 endclass
 
 //--------------------------------------------------------------------------------------------------------------------------------

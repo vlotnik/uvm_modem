@@ -2,9 +2,9 @@
 // name : compmult_base_test
 //--------------------------------------------------------------------------------------------------------------------------------
 class compmult_base_test #(
-      GP_W
-    , A_W
-    , B_W
+      GP_DW
+    , A_DW
+    , B_DW
     , CONJ_MULT
     , PIPE_CE
     , IRAXI_DW
@@ -12,9 +12,9 @@ class compmult_base_test #(
 ) extends raxi_base_test #(IRAXI_DW, ORAXI_DW);
 
     typedef uvm_component_registry #(compmult_base_test #(
-          GP_W
-        , A_W
-        , B_W
+          GP_DW
+        , A_DW
+        , B_DW
         , CONJ_MULT
         , PIPE_CE
         , IRAXI_DW
@@ -38,15 +38,15 @@ class compmult_base_test #(
     )                                   compmult_envr_h;
 
     compmult_base_seqc #(
-          .GP_W(GP_W)
-        , .A_W(A_W)
-        , .B_W(B_W)
+          .GP_DW(GP_DW)
+        , .A_DW(A_DW)
+        , .B_DW(B_DW)
     )                                   compmult_base_seqc_h;
 
     compmult_scrb #(
-          .GP_W(GP_W)
-        , .A_W(A_W)
-        , .B_W(B_W)
+          .GP_DW(GP_DW)
+        , .A_DW(A_DW)
+        , .B_DW(B_DW)
         , .PIPE_CE(PIPE_CE)
         , .CONJ_MULT(CONJ_MULT)
     )                                   compmult_scrb_h;
@@ -72,10 +72,10 @@ function void compmult_base_test::build_phase(uvm_phase phase);
     `uvm_component_create(compmult_envr #(IRAXI_DW, ORAXI_DW), compmult_envr_h)
 
     // build sequence
-    `uvm_component_create(compmult_base_seqc #(GP_W, A_W, B_W), compmult_base_seqc_h)
+    `uvm_component_create(compmult_base_seqc #(GP_DW, A_DW, B_DW), compmult_base_seqc_h)
 
     // build scoreboard
-    `uvm_component_create(compmult_scrb #(GP_W, A_W, B_W, PIPE_CE, CONJ_MULT), compmult_scrb_h)
+    `uvm_component_create(compmult_scrb #(GP_DW, A_DW, B_DW, PIPE_CE, CONJ_MULT), compmult_scrb_h)
 endfunction
 
 function void compmult_base_test::connect_phase(uvm_phase phase);
