@@ -14,7 +14,7 @@ package pkg_sincos;
     `include "sincos_seqi.svh"
     typedef uvm_sequencer #(sincos_seqi) sincos_seqr;
 
-    `include "sim_sin_cos_table_fg.svh"
+    `include "sim_sin_cos_table.svh"
     `include "sincos_scrb.svh"
 
     `include "sincos_agnt_cfg.svh"

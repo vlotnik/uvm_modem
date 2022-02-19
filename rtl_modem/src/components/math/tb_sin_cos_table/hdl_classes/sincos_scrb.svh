@@ -20,12 +20,12 @@ class sincos_scrb #(
     uvm_analysis_imp_o #(raxi_seqi, sincos_scrb #(GP_DW, PIPE_CE, PHASE_DW, SINCOS_DW)) raxi_aprt_o;
 
     // sim model
-    sim_sin_cos_table_fg #(
+    sim_sin_cos_table #(
           .GP_DW(GP_DW)
         , .PIPE_CE(PIPE_CE)
         , .PHASE_DW(PHASE_DW)
         , .SINCOS_DW(SINCOS_DW)
-    )                                   sim_sin_cos_table_fg_h;
+    )                                   sim_sin_cos_table_h;
 
     // settings
     sincos_seqi #(
@@ -55,7 +55,7 @@ function void sincos_scrb::build_phase(uvm_phase phase);
     `uvm_object_create(sincos_seqi #(GP_DW, PHASE_DW, SINCOS_DW), sincos_seqi_i)
     `uvm_object_create(sincos_seqi #(GP_DW, PHASE_DW, SINCOS_DW), sincos_seqi_o)
 
-    `uvm_object_create(sim_sin_cos_table_fg #(GP_DW, PIPE_CE, PHASE_DW, SINCOS_DW), sim_sin_cos_table_fg_h);
+    `uvm_object_create(sim_sin_cos_table #(GP_DW, PIPE_CE, PHASE_DW, SINCOS_DW), sim_sin_cos_table_h);
 endfunction
 
 function void sincos_scrb::write_i(raxi_seqi raxi_seqi_h);
@@ -77,7 +77,7 @@ function void sincos_scrb::processing();
 
     raxi_seqi_sim_i = raxi_seqi_queue_i.pop_front();
     `uvm_object_create(raxi_seqi, raxi_seqi_sim_o);
-    sim_sin_cos_table_fg_h.simulate(raxi_seqi_sim_i, raxi_seqi_sim_o);
+    sim_sin_cos_table_h.simulate(raxi_seqi_sim_i, raxi_seqi_sim_o);
     raxi_seqi_o = raxi_seqi_queue_o.pop_front();
 
     // get data from rAXI

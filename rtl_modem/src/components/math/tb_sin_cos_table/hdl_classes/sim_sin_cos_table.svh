@@ -1,13 +1,13 @@
 //--------------------------------------------------------------------------------------------------------------------------------
-// name : sim_sin_cos_table_fg
+// name : sim_sin_cos_table
 //--------------------------------------------------------------------------------------------------------------------------------
-class sim_sin_cos_table_fg #(
+class sim_sin_cos_table #(
       GP_DW = 10
     , PIPE_CE = 0
     , PHASE_DW = 12
     , SINCOS_DW = 16
 ) extends uvm_object;
-    `uvm_object_param_utils(sim_sin_cos_table_fg #(GP_DW, PIPE_CE, PHASE_DW, SINCOS_DW))
+    `uvm_object_param_utils(sim_sin_cos_table #(GP_DW, PIPE_CE, PHASE_DW, SINCOS_DW))
 
     localparam                          LATENCY = 3;
     localparam                          SINCOS_MAX = 2**(SINCOS_DW-1)-1;
@@ -34,12 +34,12 @@ endclass
 //--------------------------------------------------------------------------------------------------------------------------------
 // IMPLEMENTATION
 //--------------------------------------------------------------------------------------------------------------------------------
-function sim_sin_cos_table_fg::new(string name = "");
+function sim_sin_cos_table::new(string name = "");
     `uvm_object_create(sim_pipe #(ORAXI_DW, LATENCY, PIPE_CE), sim_pipe_h)
     `uvm_object_create(raxi_seqi, raxi_seqi_h_pipe)
 endfunction
 
-function automatic void sim_sin_cos_table_fg::simulate(raxi_seqi raxi_seqi_i, ref raxi_seqi raxi_seqi_o);
+function automatic void sim_sin_cos_table::simulate(raxi_seqi raxi_seqi_i, ref raxi_seqi raxi_seqi_o);
     bit[PHASE_DW-1:0] raxi_data_iphase;
     bit[GP_DW-1:0] raxi_data_igp;
     bit[IRAXI_DW-1:0] raxi_data_i;
