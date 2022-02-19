@@ -26,6 +26,6 @@ package pkg_sincos;
     `include "sincos_base_seqc.svh"
     `include "sincos_base_test.svh"
 
-    import "DPI-C" function int c_math_sin(input int phase, input int max, input int phase_w);
-    import "DPI-C" function int c_math_cos(input int phase, input int max, input int phase_w);
+    // import "DPI-C" function int c_math_sin(input int phase, input int max, input int phase_w);
+    // import "DPI-C" function int c_math_cos(input int phase, input int max, input int phase_w);
 endpackage

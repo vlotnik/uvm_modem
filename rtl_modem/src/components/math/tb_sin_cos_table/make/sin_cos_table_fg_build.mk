@@ -35,6 +35,7 @@ DEF_LIB = ${LIB_PATH}/work
 	-work ${DEF_LIB} \
 	+incdir+${UVM_PATH}/common \
 	-L rtl_modem \
+	-work ${DEF_LIB} ${UVM_PATH}/DSP/libraries/pkg_modem.sv \
 	-work ${DEF_LIB} ${UVM_PATH}/DSP/libraries/pkg_modem_math.sv \
 	-work ${DEF_LIB} ${UVM_PATH}/system/raxi/raxi_bfm.sv \
 	-work ${DEF_LIB} ${UVM_PATH}/system/raxi/pkg_raxi.sv \
