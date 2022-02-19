@@ -6,6 +6,8 @@ package pkg_sincos;
     `include "uvm_macros.svh"
     `include "common_macros.svh"
 
+    import pkg_modem_math::*;
+
     import pkg_raxi::*;
     import pkg_pipe::*;
 

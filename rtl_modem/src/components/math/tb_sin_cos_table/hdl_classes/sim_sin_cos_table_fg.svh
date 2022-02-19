@@ -2,18 +2,18 @@
 // name : sim_sin_cos_table_fg
 //--------------------------------------------------------------------------------------------------------------------------------
 class sim_sin_cos_table_fg #(
-      GPDW = 10
+      GP_DW = 10
     , PIPE_CE = 0
-    , PHASE_W = 12
-    , SINCOS_W = 16
+    , PHASE_DW = 12
+    , SINCOS_DW = 16
 ) extends uvm_object;
-    `uvm_object_param_utils(sim_sin_cos_table_fg #(GPDW, PIPE_CE, PHASE_W, SINCOS_W))
+    `uvm_object_param_utils(sim_sin_cos_table_fg #(GP_DW, PIPE_CE, PHASE_DW, SINCOS_DW))
 
-    localparam                      LATENCY = 3;
-    localparam                      SINCOS_MAX = 2**(SINCOS_W-1)-1;
+    localparam                          LATENCY = 3;
+    localparam                          SINCOS_MAX = 2**(SINCOS_DW-1)-1;
 
-    localparam                      RAXI_DWI = GPDW + PHASE_W;
-    localparam                      RAXI_DWO = GPDW + SINCOS_W*2;
+    localparam                          IRAXI_DW = GP_DW + PHASE_DW;
+    localparam                          ORAXI_DW = GP_DW + SINCOS_DW*2;
 
     // variables
     int sin;
@@ -21,11 +21,11 @@ class sim_sin_cos_table_fg #(
 
     // components
     sim_pipe #(
-          .DW(RAXI_DWO)
+          .DW(ORAXI_DW)
         , .SIZE(LATENCY)
         , .PIPE_CE(PIPE_CE)
-    )                               sim_pipe_h;
-    raxi_seqi                       raxi_seqi_h_pipe;
+    )                                   sim_pipe_h;
+    raxi_seqi                           raxi_seqi_h_pipe;
 
     extern function new(string name = "");
     extern function automatic void simulate(raxi_seqi raxi_seqi_i, ref raxi_seqi raxi_seqi_o);
@@ -35,26 +35,26 @@ endclass
 // IMPLEMENTATION
 //--------------------------------------------------------------------------------------------------------------------------------
 function sim_sin_cos_table_fg::new(string name = "");
-    `uvm_object_create(sim_pipe #(RAXI_DWO, LATENCY, PIPE_CE), sim_pipe_h)
+    `uvm_object_create(sim_pipe #(ORAXI_DW, LATENCY, PIPE_CE), sim_pipe_h)
     `uvm_object_create(raxi_seqi, raxi_seqi_h_pipe)
 endfunction
 
 function automatic void sim_sin_cos_table_fg::simulate(raxi_seqi raxi_seqi_i, ref raxi_seqi raxi_seqi_o);
-    bit[PHASE_W-1:0] raxi_data_iphase;
-    bit[GPDW-1:0] raxi_data_igp;
-    bit[RAXI_DWI-1:0] raxi_data_i;
-    bit[SINCOS_W-1:0] raxi_data_pipe_sin;
-    bit[SINCOS_W-1:0] raxi_data_pipe_cos;
-    bit[GPDW-1:0] raxi_data_pipe_gp;
-    bit[RAXI_DWO-1:0] raxi_data_pipe;
+    bit[PHASE_DW-1:0] raxi_data_iphase;
+    bit[GP_DW-1:0] raxi_data_igp;
+    bit[IRAXI_DW-1:0] raxi_data_i;
+    bit[SINCOS_DW-1:0] raxi_data_pipe_sin;
+    bit[SINCOS_DW-1:0] raxi_data_pipe_cos;
+    bit[GP_DW-1:0] raxi_data_pipe_gp;
+    bit[ORAXI_DW-1:0] raxi_data_pipe;
 
     // parse input transaction
     raxi_data_i = {<<{raxi_seqi_i.data}};
     {raxi_data_igp, raxi_data_iphase} = raxi_data_i;
 
     // calculate main functions
-    sin = c_math_sin(raxi_data_iphase, SINCOS_MAX, PHASE_W);
-    cos = c_math_cos(raxi_data_iphase, SINCOS_MAX, PHASE_W);
+    sin = f_sin(raxi_data_iphase, SINCOS_MAX, PHASE_DW);
+    cos = f_cos(raxi_data_iphase, SINCOS_MAX, PHASE_DW);
 
     // pipeline input
     raxi_data_pipe_sin = sin;

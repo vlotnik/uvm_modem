@@ -25,11 +25,11 @@ tests = [
 number_of_tests = 10
 
 config = {
-      "gpdw" : 10
+      "gp_dw" : 10
     , "full_table" : 0
     , "pipe_ce" : 0
-    , "phase_w" : 12
-    , "sincos_w" : 16
+    , "phase_dw" : 12
+    , "sincos_dw" : 16
     , "sv_seed" : 0
 }
 
@@ -46,11 +46,11 @@ for j in tests:
         test_name = j
         uvm_name = test_name + "_uvm"
 
-        config["gpdw"] = random.randint(8, 12)
+        config["gp_dw"] = random.randint(8, 12)
         config["full_table"] = random.randint(0, 1)
         config["pipe_ce"] = random.randint(0, 1)
-        config["phase_w"] = random.randint(10, 14)
-        config["sincos_w"] = random.randint(12, 16)
+        config["phase_dw"] = random.randint(10, 14)
+        config["sincos_dw"] = random.randint(12, 16)
         config["sv_seed"] = random.randint(0, MAX_SEED)
 
         call_uvm_test(uvm_name, config)

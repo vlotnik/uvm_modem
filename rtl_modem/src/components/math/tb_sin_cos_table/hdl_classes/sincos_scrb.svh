@@ -5,39 +5,39 @@
 `uvm_analysis_imp_decl(_o)
 
 class sincos_scrb #(
-      GPDW = 10
+      GP_DW = 10
     , PIPE_CE = 0
-    , PHASE_W = 12
-    , SINCOS_W = 16
+    , PHASE_DW = 12
+    , SINCOS_DW = 16
 ) extends raxi_scrb;
-    `uvm_component_param_utils(sincos_scrb #(GPDW, PIPE_CE, PHASE_W, SINCOS_W))
+    `uvm_component_param_utils(sincos_scrb #(GP_DW, PIPE_CE, PHASE_DW, SINCOS_DW))
     `uvm_component_new
 
     // base UVM functions
     extern function void build_phase(uvm_phase phase);
 
-    uvm_analysis_imp_i #(raxi_seqi, sincos_scrb #(GPDW, PIPE_CE, PHASE_W, SINCOS_W)) raxi_aprt_i;
-    uvm_analysis_imp_o #(raxi_seqi, sincos_scrb #(GPDW, PIPE_CE, PHASE_W, SINCOS_W)) raxi_aprt_o;
+    uvm_analysis_imp_i #(raxi_seqi, sincos_scrb #(GP_DW, PIPE_CE, PHASE_DW, SINCOS_DW)) raxi_aprt_i;
+    uvm_analysis_imp_o #(raxi_seqi, sincos_scrb #(GP_DW, PIPE_CE, PHASE_DW, SINCOS_DW)) raxi_aprt_o;
 
     // sim model
     sim_sin_cos_table_fg #(
-          .GPDW(GPDW)
+          .GP_DW(GP_DW)
         , .PIPE_CE(PIPE_CE)
-        , .PHASE_W(PHASE_W)
-        , .SINCOS_W(SINCOS_W)
-    )                               sim_sin_cos_table_fg_h;
+        , .PHASE_DW(PHASE_DW)
+        , .SINCOS_DW(SINCOS_DW)
+    )                                   sim_sin_cos_table_fg_h;
 
     // settings
     sincos_seqi #(
-          .GPDW(GPDW)
-        , .PHASE_W(PHASE_W)
-        , .SINCOS_W(SINCOS_W)
-    )                               sincos_seqi_i;
+          .GP_DW(GP_DW)
+        , .PHASE_DW(PHASE_DW)
+        , .SINCOS_DW(SINCOS_DW)
+    )                                   sincos_seqi_i;
     sincos_seqi #(
-          .GPDW(GPDW)
-        , .PHASE_W(PHASE_W)
-        , .SINCOS_W(SINCOS_W)
-    )                               sincos_seqi_o;
+          .GP_DW(GP_DW)
+        , .PHASE_DW(PHASE_DW)
+        , .SINCOS_DW(SINCOS_DW)
+    )                                   sincos_seqi_o;
 
     // functions
     extern virtual function void write_i(raxi_seqi raxi_seqi_h);
@@ -52,10 +52,10 @@ function void sincos_scrb::build_phase(uvm_phase phase);
     raxi_aprt_i = new("raxi_aprt_i", this);
     raxi_aprt_o = new("raxi_aprt_o", this);
 
-    `uvm_object_create(sincos_seqi #(GPDW, PHASE_W, SINCOS_W), sincos_seqi_i)
-    `uvm_object_create(sincos_seqi #(GPDW, PHASE_W, SINCOS_W), sincos_seqi_o)
+    `uvm_object_create(sincos_seqi #(GP_DW, PHASE_DW, SINCOS_DW), sincos_seqi_i)
+    `uvm_object_create(sincos_seqi #(GP_DW, PHASE_DW, SINCOS_DW), sincos_seqi_o)
 
-    `uvm_object_create(sim_sin_cos_table_fg #(GPDW, PIPE_CE, PHASE_W, SINCOS_W), sim_sin_cos_table_fg_h);
+    `uvm_object_create(sim_sin_cos_table_fg #(GP_DW, PIPE_CE, PHASE_DW, SINCOS_DW), sim_sin_cos_table_fg_h);
 endfunction
 
 function void sincos_scrb::write_i(raxi_seqi raxi_seqi_h);

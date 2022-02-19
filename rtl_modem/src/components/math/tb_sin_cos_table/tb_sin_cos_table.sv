@@ -14,14 +14,14 @@ module tb_sin_cos_table;
     import pkg_sincos::*;
 
     // main settings
-    parameter                           GPDW = 10;
+    parameter                           GP_DW = 10;
     parameter                           FULL_TABLE = 0;
-    parameter                           PHASE_W = 12;
-    parameter                           SINCOS_W = 16;
+    parameter                           PHASE_DW = 12;
+    parameter                           SINCOS_DW = 16;
     parameter                           PIPE_CE = 0;
 
-    localparam                          RAXI_DWI = GPDW + PHASE_W;
-    localparam                          RAXI_DWO = GPDW + SINCOS_W*2;
+    localparam                          IRAXI_DW = GP_DW + PHASE_DW;
+    localparam                          ORAXI_DW = GP_DW + SINCOS_DW*2;
 
 //--------------------------------------------------------------------------------------------------------------------------------
 // clock generator
@@ -34,28 +34,28 @@ module tb_sin_cos_table;
 // interfaces
 //--------------------------------------------------------------------------------------------------------------------------------
     raxi_bfm #(
-          .DW(RAXI_DWI)
+          .DW(IRAXI_DW)
     )                                   raxi_bfm_i();
     raxi_bfm #(
-          .DW(RAXI_DWO)
+          .DW(ORAXI_DW)
     )                                   raxi_bfm_o();
 
 //--------------------------------------------------------------------------------------------------------------------------------
 // DUT connection
     bit                                 idut_clk;
     bit                                 idut_valid;
-    bit[RAXI_DWI-1:0]                   idut_data;
+    bit[IRAXI_DW-1:0]                   idut_data;
     bit                                 odut_valid;
-    bit[RAXI_DWO-1:0]                   odut_data;
+    bit[ORAXI_DW-1:0]                   odut_data;
 //--------------------------------------------------------------------------------------------------------------------------------
     sin_cos_table #(
-          .g_raxi_dwi                   (RAXI_DWI)
-        , .g_raxi_dwo                   (RAXI_DWO)
-        , .g_gpdw                       (GPDW)
+          .g_gp_dw                      (GP_DW)
         , .g_full_table                 (FULL_TABLE)
-        , .g_phase_w                    (PHASE_W)
-        , .g_sincos_w                   (SINCOS_W)
+        , .g_phase_dw                   (PHASE_DW)
+        , .g_sincos_dw                  (SINCOS_DW)
         , .g_pipe_ce                    (PIPE_CE)
+        , .g_iraxi_dw                   (IRAXI_DW)
+        , .g_oraxi_dw                   (ORAXI_DW)
     )
     dut(
           .iCLK                         (idut_clk)
@@ -78,18 +78,18 @@ module tb_sin_cos_table;
 // UVM test
 //--------------------------------------------------------------------------------------------------------------------------------
     typedef sincos_base_test #(
-          .GPDW(GPDW)
+          .GP_DW(GP_DW)
         , .FULL_TABLE(FULL_TABLE)
-        , .PHASE_W(PHASE_W)
-        , .SINCOS_W(SINCOS_W)
+        , .PHASE_DW(PHASE_DW)
+        , .SINCOS_DW(SINCOS_DW)
         , .PIPE_CE(PIPE_CE)
-        , .RAXI_DWI(RAXI_DWI)
-        , .RAXI_DWO(RAXI_DWO)
+        , .IRAXI_DW(IRAXI_DW)
+        , .ORAXI_DW(ORAXI_DW)
     )                                   sincos_base_test_h;
 
     initial begin
-        uvm_config_db #(virtual raxi_bfm #(RAXI_DWI))::set(null, "*", "raxi_bfm_i", raxi_bfm_i);
-        uvm_config_db #(virtual raxi_bfm #(RAXI_DWO))::set(null, "*", "raxi_bfm_o", raxi_bfm_o);
+        uvm_config_db #(virtual raxi_bfm #(IRAXI_DW))::set(null, "*", "raxi_bfm_i", raxi_bfm_i);
+        uvm_config_db #(virtual raxi_bfm #(ORAXI_DW))::set(null, "*", "raxi_bfm_o", raxi_bfm_o);
         run_test();
     end
 

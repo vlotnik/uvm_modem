@@ -1,10 +1,10 @@
 ## | base
 
 BASE_RUN_SIM_CMD = \
-	-g GPDW=${CONFIG_GPDW} \
+	-g GP_DW=${CONFIG_GP_DW} \
 	-g FULL_TABLE=${CONFIG_FULL_TABLE} \
-	-g PHASE_W=${CONFIG_PHASE_W} \
-	-g SINCOS_W=${CONFIG_SINCOS_W} \
+	-g PHASE_DW=${CONFIG_PHASE_DW} \
+	-g SINCOS_DW=${CONFIG_SINCOS_DW} \
 	-g PIPE_CE=${CONFIG_PIPE_CE} \
 	-L rtl_modem \
 	-L ${DEF_LIB} \

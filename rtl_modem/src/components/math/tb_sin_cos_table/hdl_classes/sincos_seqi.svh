@@ -2,11 +2,11 @@
 // name : sincos_seqi
 //--------------------------------------------------------------------------------------------------------------------------------
 class sincos_seqi #(
-      GPDW = 10
-    , PHASE_W = 12
-    , SINCOS_W = 12
+      GP_DW = 10
+    , PHASE_DW = 12
+    , SINCOS_DW = 12
 ) extends raxi_seqi;
-    `uvm_object_utils(sincos_seqi #(GPDW, PHASE_W, SINCOS_W))
+    `uvm_object_utils(sincos_seqi #(GP_DW, PHASE_DW, SINCOS_DW))
     `uvm_object_new
 
     extern function void post_randomize();
@@ -20,11 +20,11 @@ class sincos_seqi #(
     extern function string i2string();
     extern function string o2string();
 
-    localparam GP_MAX = 2**(GPDW) - 1;
-    localparam PHASE_MAX = 2**(PHASE_W) - 1;
+    localparam GP_MAX = 2**(GP_DW) - 1;
+    localparam PHASE_MAX = 2**(PHASE_DW) - 1;
 
-    localparam RAXI_DWI = GPDW + PHASE_W;
-    localparam RAXI_DWO = GPDW + SINCOS_W*2;
+    localparam RAXI_DWI = GP_DW + PHASE_DW;
+    localparam RAXI_DWO = GP_DW + SINCOS_DW*2;
 
     int igp;
     int iphase_v;
@@ -34,12 +34,12 @@ class sincos_seqi #(
     int osin;
     int ocos;
 
-    bit[PHASE_W-1:0]                    raxi_data_iphase;
-    bit[GPDW-1:0]                       raxi_data_igp;
+    bit[PHASE_DW-1:0]                    raxi_data_iphase;
+    bit[GP_DW-1:0]                       raxi_data_igp;
     bit[RAXI_DWI-1:0]                   raxi_data_i;
-    bit[SINCOS_W-1:0]                   raxi_data_osin;
-    bit[SINCOS_W-1:0]                   raxi_data_ocos;
-    bit[GPDW-1:0]                       raxi_data_ogp;
+    bit[SINCOS_DW-1:0]                   raxi_data_osin;
+    bit[SINCOS_DW-1:0]                   raxi_data_ocos;
+    bit[GP_DW-1:0]                       raxi_data_ogp;
     bit[RAXI_DWO-1:0]                   raxi_data_o;
 endclass
 
