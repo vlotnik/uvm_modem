@@ -22,5 +22,6 @@ package pkg_raxi;
 
     `include "raxi_scrb.svh"
 
+    `include "raxi_base_seqc.svh"
     `include "raxi_base_test.svh"
 endpackage
