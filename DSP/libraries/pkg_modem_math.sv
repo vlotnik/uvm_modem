@@ -58,4 +58,19 @@ package pkg_modem_math;
 
         return c;
     endfunction
+
+    function int f_divide_and_round(int data, int lsb);
+        real result_real;
+        real result_floor;
+        int result_int;
+
+        result_real = $itor(data) / $itor(2**lsb);
+        if (data >= 0)
+            result_floor = $floor(result_real + 0.5);
+        else
+            result_floor = $ceil(result_real - 0.5);
+        result_int = $rtoi(result_floor);
+
+        return result_int;
+    endfunction
 endpackage
